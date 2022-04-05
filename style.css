@@ -13,7 +13,7 @@ head {
 }
 
 section .btn {
-    background-color: rgb(255, 246, 255);
+    background-color: rgb(127, 233, 109);
     border: 3px solid black;
     border-radius: 20px;
     padding: 10px 20px;
@@ -25,9 +25,20 @@ section .btn {
     
 }
 
+section .title {
+    background-color: rgb(127, 233, 109);
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: black;
+    font-family: Quicksand;
+    box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+}
+
 .btn:hover {
     text-transform: uppercase;
-    color: rgb(255, 246, 255);
+    color: rgb(127, 233, 109);
     background-color: black;
     box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
@@ -66,3 +77,5 @@ nav ul li {
     justify-content: space-between;
     */
 }
+
+code
