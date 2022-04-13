@@ -4,6 +4,7 @@
 	<title> @isaranwrap </title>
 	<link href = "style.css" type = "text/css" rel = "stylesheet">
 	<script src = "https://unpkg.com/react@18.1.0/umd/react.production.min.js"></script>
+	<script src = "https://d3js.org/d3.v3.min.js"></script>
 </head>
 
 <box> I am interested in artificial intelligence and nephrology. </box>
@@ -12,16 +13,26 @@
 </a>
 
 <body>
-	<svg width = 1024 height = 480>
+	<svg width = 400 height = 400>
 		<clipPath id = "circle1">
-		<circle cx = 512 cy = 240 r = 128 stroke = "yellow" stroke-width = 10/>
+		<circle cx = 200 cy = 200 r = 128 stroke = "yellow" stroke-width = 10/>
 		</clipPath>
 		<a href = "https://github.com/isaranwrap">
-		<image width=1024 height=480 xlink:href="imgs/boston.jpeg" clip-path="url(#circle1)" />
+		<image width = 400 height = 400 xlink:href="imgs/boston.jpeg" clip-path="url(#circle1)" />
 		</a>
 	</svg>
 	<script>
 		console.log("Hello JS ");
+		var canvas = d3.select("body")
+						.append("svg")
+						.attr("width", 500)
+						.attr("height", 500);
+
+		var circle = canvas.append("circle")
+							.attr("cx", 250)
+							.attr("cy", 250)
+							.attr("r", 50)
+							.attr("fill", "#2d3ff3");
 	</script>
 
 </body>
