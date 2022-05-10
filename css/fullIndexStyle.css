@@ -1,0 +1,19 @@
+body {
+	/* background-color: #A7A7A9; */
+/*	background-color: #6F6FAE; */
+	background-color: #484893;
+	color: #f6c556;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link, a:visited {
+    color: inherit;
+}
+
+a:hover {
+    color: blue;
+
+}
