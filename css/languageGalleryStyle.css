@@ -18,7 +18,7 @@
     left: calc(50% - 100px);
     transform-style: preserve-3d;
     transform: perspective(1000px);
-    animation: autoRun 20s linear infinite;
+    animation: autoRun 10s linear infinite;
     z-index: 3;
 }
 
@@ -50,6 +50,11 @@
     height: 100%;
     object-fit: cover;
     border-radius: 20%;
+    cursor: none;
+}
+
+.banner .slider .item img:hover {
+    transform: scale(1.2);
 }
 
 .banner .content {
