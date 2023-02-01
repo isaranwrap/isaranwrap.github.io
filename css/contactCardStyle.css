@@ -45,9 +45,18 @@ img {
   height: auto;
 }
 
+/*=============== LET'S COLLABORATE text ===============*/
+@media (max-width: 767px) {
+  #cardTitle {
+      display:none;
+  }
+}
+
 #cardTitle {
   transform: translate(0,300px);
 }
+
+
 /*=============== CARD ===============*/
 .container {
   display: grid;
