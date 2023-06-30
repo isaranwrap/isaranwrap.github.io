@@ -1,38 +1,59 @@
-<h1 class = "title"> Hello world </h1>
+<h1 class = "title" id = "titleMsg" align="center"> LET'S CHANGE THE WORLD TOGETHER </h1>
 
 <head> 
 	<title> @isaranwrap - Ishan Saran</title>
-	<link href = "style.css" type = "text/css" rel = "stylesheet">
+	<link href = "css/style.css" type = "text/css" rel = "stylesheet">
 	<script src = "https://unpkg.com/react@18.1.0/umd/react.production.min.js"></script>
 	<script src = "https://d3js.org/d3.v3.min.js"></script>
 </head>
 
-<box> I am interested in artificial intelligence and nephrology. </box>
 <a href = "https://github.com/isaranwrap/StandardizingAKI"> 
-	<img width=132 height=144 src="images/07hexlogo.png" style = "float: left">
+	<div id="flaggerLogo"> <img width=132 height=144 src="images/07hexlogo.png" style = "float: left"></div>
 </a>
 
 <body>
 	<svg width = 400 height = 400>
 		<clipPath id = "circle1">
-		<circle cx = 200 cy = 200 r = 128 stroke = "yellow" stroke-width = 10/>
+		<circle cx = 200 cy = 200 r = 150 stroke = "yellow" stroke-width = 10/>
 		</clipPath>
 		<a href = "https://github.com/isaranwrap">
-		<image width = 400 height = 400 xlink:href="images/boston.jpeg" clip-path="url(#circle1)" />
+		<image id = "profilePic" width = 400 height = 400 xlink:href="images/boston.jpeg" clip-path="url(#circle1)" style="float: center"/>
 		</a>
 	</svg>
-	<h6> Text will appear here.</h6>
-	<h6> OK - so obviously this site is a work in progress... </h6>
-	<h6> Feel free to text me 702-375-1516 or email ishansaran65@gmail.com while I'm working on this </h6>
-	<h6> For now I'm documenting my progress here; with more to follow </h6>
-	<h6> This is extremely useful: https://www.youtube.com/watch?v=wg0ZDwM5xrU </h6>
-	<h6> Let's see how this link updates as I add more videos (and modify the name) </h6>
 
-	<svg width= 800 height = 800>
-		<rect height=400 width=400 x=200 y=200 fill="pink" stroke="black"> </rect>
-			<text x=40% y=40% fill="red">Site in progress! Check back soon! </text>
+	<box> I am interested in artificial intelligence, language learning, and medicine. </box>
 
+	<div id="misc-chunk">
+		<p>
+		<h4> Text will appear here.</h4>
+		<h6> OK - so obviously this site is a work in progress... </h6>
+		<h6> Feel free to text me 702-375-1516 or email ishansaran65@gmail.com while I'm working on this </h6>
+		<h6> For now I'm documenting my progress here; with more to follow </h6>
+		<h6> This is useful: file:///Users/Praveens/Desktop/ishan/website/isaranwrap.github.io/index.html </h6> 
+		<h4> Let's see how these links update as I add more videos (and modify the name(s)) </h4>
+		<h5> Simple internal <a href="fullIndex.html" id="miscTag"> important </a> links are <a href="aginition.html" id="miscTag"> here</a>.</h5>
+		<h5> Although I'm not sure everyone has access, for now, the <a href="fullIndex.html"> important </a> external links are <a href="agnition.html"> here </a>:</h5>
+		<ul>
+			<li> <a href="https://docs.google.com/spreadsheets/d/1XAorfvsE7zQ4dp6QRjgLrAzHHwUUJLpYV7-b4fvRsF8/edit?gid=0#gid=0">Languages</a> </li>
+			<li> <a href="https://docs.google.com/spreadsheets/d/1TNH0vHb_PfGLG-pAvVCqikYGkRnnoIh-OayV_gGwLN8/edit?gid=0#gid=0">Journal </a> </li>
+			<li> . </li>
+			<li> . </li>
+			<li> . </li>
+			<li> right</li>
+		</ul>
+		</p>
+	</div>
+
+	<svg width="800" height="800">
+		<rect height="400" width="400" x="200" y="200" fill="pink" stroke="black"></rect>
+		<text x="40%" y="40%" fill="red">
+			<tspan x="40%" dy="0">Site in progress! Check back soon!</tspan>
+			<tspan x="40%" dy="40px">Feel free to contact me: </tspan>
+			<tspan x="45%" dy="40px"> 📞 702-375-1516 (<a href="tel:+17023751516">Ph</a>) </tspan>
+			<tspan x="45%" dy="40px"> 📧 ishansaran65@gmail.com (<a href="mailto:ishansaran65@gmail">Em</a>)</tspan>
+		</text>
 	</svg>
+	
 <!--
 	<script>
 		console.log("Hello JS ");
