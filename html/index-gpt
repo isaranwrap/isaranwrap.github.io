@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Wheel</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .card .rating {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 50px auto;
+        }
+
+        .card .rating .block {
+            position: absolute;
+            width: 10px;
+            height: 50px;
+            background: black;
+            top: 0;
+            left: 50%;
+            transform-origin: 0 100%;
+            animation: spin 4s linear infinite;
+        }
+
+        /* Green when active */
+        .card .rating .block.active {
+            background: darkgreen;
+            box-shadow: 0 0 15px green, 0 0 30px #0f0;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="rating">
+        <div class="block"></div>
+        <button class="btn" onclick="activateWheel()">
+            <span class="material-icons-outlined"><i class='fas fa-fingerprint'></i></span>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Initializing the progress wheel
+    const rating = document.getElementsByClassName('rating')[0];
+
+    for (var i = 1; i < 100; i++){
+        rating.innerHTML += "<div class='block'></div>";
+        const block = rating.getElementsByClassName('block')[i];
+        block.style.transform = "rotate("+ 3.6 * i + "deg)";
+        block.style.animationDelay = `${i/40}s`; 
+    }
+
+    // Function to activate the wheel color change
+    function activateWheel() {
+        const blocks = document.getElementsByClassName('block');
+        for (let i = 0; i < blocks.length; i++) {
+            blocks[i].classList.toggle('active');
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Block Color</title>
+    <style>
+        .card .rating .block:nth-child(-n+101) {
+            background: green;
+            box-shadow: 0 0 15px black, 0 0 10px #0f0;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card .rating .block.active {
+            background: black;
+            box-shadow: none; /* Remove the glow when the block is black */
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="rating">
+        <div class="block" id="circle">
+            <button class="btn" onclick="toggleBlockColor()">
+                <span class="material-icons-outlined"><i class='fas fa-fingerprint'></i></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleBlockColor() {
+        const blocks = document.querySelectorAll('.card .rating .block:nth-child(-n+101)');
+        blocks.forEach(block => {
+            block.classList.toggle('active');
+        });
+    }
+</script>
+
+</body>
+</html>

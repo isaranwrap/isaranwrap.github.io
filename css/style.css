@@ -1,158 +1,206 @@
-/* 
-The colors used in the index.html (and whatever else style.css controls)
-
-rgb(234,182,118) <--> 
-
-
-& also colors to consider(ed) used:
-#819595
-#696773
-#A7AC9A
-
-#C2EABA
-#C5F4E0
-*/
-/* I might want to consider renaming this file: indexStyle.css */
-/* */
-p {
-    text-align: left;
-}
-
-.title {
+@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+body {
+    background: linear-gradient(
+        90deg, rgba(46, 44, 45, 1) 0%,
+        rgba(66, 64, 67, 1) 100%
+    );
     display: flex;
-    color: #C5F4E0; /* Change this to your desired color */
-    /* text-align: center; Align text to the center */
-    padding: 20px;
-    border: 2px solid #696773; /* Add a border */
-    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
-    display: inline-block; /* Ensure the box only surrounds the text */
-    /* justify-content: center; */
-    /* align-items: center; */
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
-/* Hover effect */
-.title:hover {
-    background-color: #C5F4E0; /* Hover background color */
-    color: #696773; /* Hover text color */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect on hover */
+html, body, span, button {
+    cursor: none;
 }
 
+.card {
+    z-index:100;
+}
 
-head {
-    padding: 0px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    padding: 0px;
-    margin: 0;
-    height: 100%;
-    width: 100%;
-    background-image: url('../images/chess007.jpeg');
-	background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-}
-
-#misc-chunk {
-    color: #E6EFE9; /* Change this to your desired color */
-}
-
-#miscTag {
-    color: #484893;
-}
-
-/* #flaggerLogo {
     display: flex;
-    /* align-items: center;
-    justify-content: center; */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: radial-gradient(#444,#222);
+}
+
+.card {
+    position: relative;
+    width: 250px;
+    height: 250px;
+}
+
+.card .rating {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* background: #f00; */
+}
+
+.card .rating .block {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: black; /* This is the color that affects the progress Wheel */
+    left: 50%;
+    transform-origin: 50% 100px;
+    opacity: 0;
+    animation: animate 2s linear forwards;
+    /* transform: rotate(25deg); */
+}
+
+/* .card .rating .block button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 } */
 
-#flaggerLogo img {
-    display: block;
+@keyframes animate {
+    to {
+        opacity: 1;
+    }
 }
 
-#profilePic {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* .card .rating .block.green-spoke {
+    background-color: green;
+    box-shadow: 0 0 15px green, 0 0 15px #0f0;
+  }
+  
+  .card .rating .block.initial-green {
+    background: black;
+    box-shadow: 0 0 15px black, 0 0 20px #0f0;
+  } */
+/* .card .rating .block.active {
+    background: darkgreen;
+    box-shadow: 0 0 15px green, 0 0 30px #0f0;
+} */
 
-#profilePic img {
-    display: block;
-}
+/* .card .rating .block:nth-child(-n+101) {
+    background: black;
+    box-shadow: 0 0 15px green, 0 0 15px #0f0;
+} */
 
-box {
-    color: rgb(234,182,118); /* Change this to your desired color */
-    display: block; /* Optional: to make the <box> element behave like a block element */
-}
+/* .card .rating .block:nth-child(-n+1) {
+    background: black;
+    box-shadow: 0 0 15px green, 0 0 20px #0f0;
+} */
+
+.block {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: black; /* Initial color */
+    left: 50%;
+    transform-origin: 50% 100px;
+    opacity: 0;
+    animation: animate 2s linear forwards;
+    transition: background-color 0.5s ease; /* Animation for color change */
+  }
+
+/* .card .rating .block:nth-child(-n+101) {
+    background: black;
+    box-shadow: 0 0 15px green, 0 0 20px #0f0;
+} */
+
+/* .card .rating h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.5em;
+} */
 
 
-
-section .btn {
-    background-color: rgb(127, 233, 109);
-    border: 3px solid black;
-    border-radius: 20px;
-    padding: 10px 20px;
-    color: black;
-    font-family: Quicksand;
-    box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5);
-    text-transform: uppercase;
-    /*background-size: auto; */
-    
-}
-
-
-
-section .title {
-    background-color: rgb(127, 233, 109);
-    border: 3px solid black;
-    border-radius: 20px;
-    padding: 10px 20px;
-    color: black;
-    font-family: Quicksand;
-    box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5);
-    text-transform: uppercase;
-}
-
-.btn:hover {
-    text-transform: uppercase;
-    color: rgb(127, 233, 109);
-    background-color: black;
-    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-}
-a {
-    text-decoration: none;
-    color: inherit;
-    /* */
-}
-
-nav {
-    height: 100%;
+.circle-cursor {
     position: fixed;
-    right: 0px;
-    
-    /* 
-    width: 10%; 
-    
-    */
+    width: 10px;
+    height: 10px;
+    /* background-color: #008ECE; */
+    background-color: rgb(135, 206, 235);
+    border-radius: 50%;
+    pointer-events: auto;
+    z-index: 9999;
+    display: none;
 }
 
-nav ul {
-    height: 100%;
-    background-color: black;
-    color: antiquewhite;
-    /* */
-}
-    
-nav ul li {
-    padding: 10px;
-    display: inline-block;
-    
-    /*
-    display: block;
-    flex: 0 1 auto;
-    align-content: space-between;
-    justify-content: space-between;
-    */
+.btn {
+    position: absolute;
+    left: -50px;
+    top: 50px;
+    width: 7em;
+    height: 7em;
+    border-radius: 50%;
+    outline: none;
+    border: 4px #090909 solid;
+    background: linear-gradient(
+        145deg, #171717, #444245
+    );
+    box-shadow: inset 2px 2px 0px #7d7c7e,
+        inset -2px -2px 0px #1c1c1c;
+    color: #a6a6a6;
+    /* transform: translate(-50%, 50%); */
 }
 
+.btn span {
+    font-size: 2.9em;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: inherit;
+    background: linear-gradient(
+        145deg, #262626, #606060
+    );
+    width: 7.25em;
+    height: 7.25em;
+    z-index: -1;
+    box-shadow: 11px 11px 22px #141414,
+                -11px -11px 22px #525252;
+}
+
+.button-clicked {
+    background: linear-gradient(
+        -185deg, #131313, #444245;
+    );
+    box-shadow: inset -2px -2px 0px #5e5e5e,
+        inset 2px 2px 0px #1c1c1c;
+    color: rgb(135, 206, 235);
+}
+
+.button-hover {
+    background: #5e5e5e;
+}
+
+.icon-clicked {
+    /* color: #0fa; */
+    color: rgb(135, 206, 235);
+    text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+}
+/* .icon-clicked {
+    color: #fff;
+    text-shadow: 0px 0px 15px #008ECE;
+} */
+
+/* https://css-tricks.com/how-to-create-neon-text-with-css/ */

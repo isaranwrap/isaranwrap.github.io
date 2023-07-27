@@ -1,0 +1,162 @@
+/* 
+The colors used in the index.html (and whatever else style.css controls)
+
+rgb(234,182,118) <--> 
+
+
+& also colors to consider(ed) used:
+#819595
+#696773
+#A7AC9A
+
+#C2EABA
+#C5F4E0
+*/
+/* I might want to consider renaming this file: indexStyle.css */
+/* */
+p {
+    text-align: left;
+}
+
+.title {
+    display: flex;
+    color: #C5F4E0; /* Change this to your desired color */
+    /* text-align: center; Align text to the center */
+    padding: 20px;
+    border: 2px solid #696773; /* Add a border */
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+    display: inline-block; /* Ensure the box only surrounds the text */
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+
+/* Hover effect */
+.title:hover {
+    background-color: #C5F4E0; /* Hover background color */
+    color: #696773; /* Hover text color */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect on hover */
+}
+
+
+head {
+    padding: 0px;
+}
+
+/* body {
+    padding: 0px;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url('../images/chess007.jpeg');
+	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+} */
+
+body {
+    background-color: #696773;
+}
+
+#misc-chunk {
+    color: #E6EFE9; /* Change this to your desired color */
+}
+
+#miscTag {
+    color: #484893;
+}
+
+/* #flaggerLogo {
+    display: flex;
+    /* align-items: center;
+    justify-content: center; 
+} */
+
+#flaggerLogo img {
+    display: block;
+}
+
+#profilePic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#profilePic img {
+    display: block;
+}
+
+box {
+    color: rgb(234,182,118); /* Change this to your desired color */
+    display: block; /* Optional: to make the <box> element behave like a block element */
+}
+
+
+
+section .btn {
+    background-color: rgb(127, 233, 109);
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: black;
+    font-family: Quicksand;
+    box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    /*background-size: auto; */
+    
+}
+
+
+
+section .title {
+    background-color: rgb(127, 233, 109);
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: black;
+    font-family: Quicksand;
+    box-shadow: 0 30px 30px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    text-transform: uppercase;
+    color: rgb(127, 233, 109);
+    background-color: black;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+a {
+    text-decoration: none;
+    color: inherit;
+    /* */
+}
+
+nav {
+    height: 100%;
+    position: fixed;
+    right: 0px;
+    
+    /* 
+    width: 10%; 
+    
+    */
+}
+
+nav ul {
+    height: 100%;
+    background-color: black;
+    color: antiquewhite;
+    /* */
+}
+    
+nav ul li {
+    padding: 10px;
+    display: inline-block;
+    
+    /*
+    display: block;
+    flex: 0 1 auto;
+    align-content: space-between;
+    justify-content: space-between;
+    */
+}
+
