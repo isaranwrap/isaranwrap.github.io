@@ -1,0 +1,107 @@
+.body {
+    background: #78889f;
+}
+
+.banner {
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.banner .slider {
+    position: absolute;
+    width: 200px;
+    height: 250px;
+    top: 30%;
+    left: calc(50% - 100px);
+    transform-style: preserve-3d;
+    transform: perspective(1000px);
+    animation: autoRun 20s linear infinite;
+    z-index: 3;
+}
+
+@keyframes autoRun {
+    0% {
+        transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+    } 
+    
+    50% {
+        transform: perspective(1000px) rotateX(-180deg) rotateY(360deg);
+    }
+
+    100% {
+        transform: perspective(1000px) rotateX(-360deg) rotateY(720deg);
+    }
+}
+
+.banner .slider .item {
+    position: absolute;
+    inset: 0 0 0 0;
+    transform: 
+        rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) 
+        translateZ(550px);
+
+}
+
+.banner .slider .item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20%;
+}
+
+.banner .content {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1400px, 100vw);
+    height: max-content;
+    padding-bottom: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.banner .content h1{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16em;
+    line-height: 1em;
+    color: #25283b;
+    position: relative;
+}
+
+.banner .content h1::after{
+    position: absolute;
+    inset: 0 0 0 0;
+    content: attr(data-content);
+    z-index: 2;
+    -webkit-text-stroke: 2px aliceblue;
+    color: transparent;
+}
+
+.banner .content .author {
+    font-family: Calibri, 'Trebuchet MS', sans-serif;
+    text-align: right;
+    max-width: 250px;
+}
+
+.banner .content h2 {
+    font-size: 3em;
+}
+
+.banner .content .model {
+    background-image: url(../images/profilePic-alphabg.png);
+    width: 100%;
+    height: 75vh;
+    position: absolute;
+    bottom: -300;
+    left: 0;
+    background-size: auto 75%;
+    background-repeat: no-repeat;
+    background-position: top center;
+    z-index: 1;      
+}
