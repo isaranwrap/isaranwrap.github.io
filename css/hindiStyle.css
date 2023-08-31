@@ -1,18 +1,27 @@
+* {
+  background-color: rgb(242, 234, 238);
+}
 
+body  {
+  background: linear-gradient(
+    90deg, rgb(242, 234, 238) 0%,
+    rgb(238, 224, 246) 100%
+);
+}
 
 #hindi {
     color: #ff5733;
 }
 
 #english {
-    color: aliceblue;
+    color: rgb(242, 234, 238);
 }
 
 /* Kinda dumb lol */
 #spanish-fin {
     padding: 50px 50px 50px 50px;
     background: linear-gradient(45deg, darkseagreen, #C4B454);
-    color: #f2f2f2;
+    color: rgb(242, 234, 238);
     outline: none;
     border: none;
     /* font-size: 20px; */

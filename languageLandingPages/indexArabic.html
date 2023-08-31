@@ -1,26 +1,39 @@
 <!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Arabic Ascension </title>
+        <link rel="stylesheet" href="../css/arabicGalleryStyle.css">
+        <link rel="icon" href="../images/arabicLessonGalleryEx.png" type="image/x-icon" />
+    </head>
 
-<head> 
-	<title> @isaranwrap - Chess Lessons</title>
-	<link href = "../css/style.css" type = "text/css" rel = "stylesheet">
-	<link href="../css/arabicStyle.css" type="text/css" rel = "stylesheet">
-	<script src = "https://kit.fontawesome.com/fd3faaa138.js" crossorigin="anonymous"></script>
-	<script src="../code/circleCursor.js"></script>
-</head>
-<body>
+    <body>
+        <div class="enlarged" id="fullContainer">
+            <img src="../images/arabicAscension/l1.webp" id="fullImg">
+            <span onclick="closeFullScreen()" id="s1"> x </span>
+            <span onclick="window.location.href='https://youtu.be/t9QeaG2dzQE?si=QCFnU60nfKR8ljCq'" id="s2"> <img src="../images/youtubeIcon.png" height="48px" width="64px"> </span>
+            <!-- <img src="../images/youtubeIcon.png" width="128px" height="128px"> -->
+        </div>
+        <div class="gallery">
+            <img src="../images/arabicAscension/pt1.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt2.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt4.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt5.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt6-hotel.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt7-phone.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt8-taxi.webp" onclick="openImage(this.src)">
+            <img src="../images/arabicAscension/pt9-final.jpg" onclick="openImage(this.src)">
 
-	<div class="card">
-		<div class="rating">
-			<div class="block" id="circle">
-				<button class="btn">
-				<span class="material-icons-outlined"><i class='fas fa-fingerprint'></i></span>
-				</button>
-			</div>
-		</div>
-	</div>
+        </div>
+        <div>
+            <h1 >
+                <hr>
+                <hr>
+                Also, Try <a href="../html/spanishLessonGallery.html"> Spanish Success</a>!</h1>
+                <hr>
+				<hr>
+        </div>
 
-	<script src="../code/progressWheel.js"></script>
-	<script src = "../code/landingPage.js"></script>
-	<!-- <script src= "html/_agnition.html" -->
-</body>
-
+        <script src="../code/arabicGallery.js"></script>
+    </body>
+</html>
