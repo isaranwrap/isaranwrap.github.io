@@ -26,8 +26,6 @@ html, body, span, button {
 
 
 img:hover {
-    width: 1440px;
-    height: 960px;
-    border: 2px solid saddlebrown;
+    /* border: 2px solid saddlebrown; */
     box-shadow: 0 0 15px black, 0 0 20px #000020;
 }
