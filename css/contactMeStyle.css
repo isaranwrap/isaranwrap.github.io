@@ -14,16 +14,17 @@ body {
   /* height: 100vh; */
   margin: 0 20px;
   padding: 0;
-  /* background-image: url('../images/nature-1.webp'); */
   /* background-image: url('../images/nature-2.webp'); */
-  background-image: radial-gradient();
+  background: linear-gradient(
+        90deg, #3c4c34 0%,
+        #3c4c34 100%
+    );
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #3c4c34;
 }
 
 html, body, span, button, center {
@@ -47,7 +48,7 @@ html, body, span, button, center {
 .outer{
   position: relative;
   margin: 0 50px;
-  background: #C4B454;
+  background: #999;
 }
 
 .button{
@@ -74,8 +75,9 @@ is how I would select just arabic button
   cursor: none;
 }
 .outer button{
-  background: linear-gradient(45deg, darkseagreen, #C4B454);
-  color: #f2f2f2;
+  /* background: linear-gradient(45deg, darkseagreen, #C4B454); */
+  filter: grayscale();
+  color: #9b1f1f;
   outline: none;
   border: none;
   font-size: 48px;
@@ -83,6 +85,11 @@ is how I would select just arabic button
   letter-spacing: 1px;
   text-transform: uppercase;
   cursor: none;
+}
+
+.outer button:hover {
+  background: linear-gradient(45deg, darkseagreen, #C4B454);
+  filter: none;
 }
 .button button{
   height: 60px;
@@ -212,7 +219,18 @@ img {
   margin: left;
   align-items: center;
   height: 20vh;
+  /* filter: grayscale(); */
+}
 
+
+img:hover {
+  background-image: url('../images/profilePic-green.jpg');
+  filter: none;
+  border: none;
+}
+
+#textUnderProfile {
+  font-size: 24px;
 }
 
 .contact-container {
