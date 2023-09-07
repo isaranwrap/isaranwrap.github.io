@@ -3,17 +3,188 @@
 
 @import url("https://fonts.googleapis.com/css?family=Crimson+Text&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Work+Sans&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   /* Prev: background: #28305a; */
-  background: #151b38;
+  display: flex; 
   /* height: 100vh; */
   margin: 0 20px;
+  padding: 0;
   /* background-image: url('../images/nature-1.webp'); */
   /* background-image: url('../images/nature-2.webp'); */
-  background-image: url('../images/nature-3.webp');
+  background-image: radial-gradient();
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #3c4c34;
+}
+
+html, body, span, button, center {
+  cursor: none;
+}
+
+.center{
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.center .top {
+  display: flex;
+  text-align: stretch;
+  align-items: center;
+  justify-content: left;
+}
+
+.outer{
+  position: relative;
+  margin: 0 50px;
+  background: #C4B454;
+}
+
+.button{
+  height: 70px;
+  width: 220px;
+  border-radius: 50px;
+}
+
+/* #ar {
+is how I would select just arabic button
+} */
+
+.circle{
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+}
+
+.outer button, .outer span{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: none;
+}
+.outer button{
+  background: linear-gradient(45deg, darkseagreen, #C4B454);
+  color: #f2f2f2;
+  outline: none;
+  border: none;
+  font-size: 48px;
+  z-index: 9;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: none;
+}
+.button button{
+  height: 60px;
+  width: 210px;
+  border-radius: 50px;
+}
+.circle button{
+  height: 180px;
+  width: 180px;
+  border-radius: 50%;
+}
+.outer span{
+  height: 100%;
+  width: 100%;
+  background: inherit;
+}
+.button span{
+  border-radius: 50px;
+}
+.circle span{
+  border-radius: 50%;
+}
+.outer:hover span:nth-child(1){
+  filter: blur(7px);
+}
+
+.outer:hover span:nth-child(2){
+  filter: blur(14px);
+}
+.outer:hover{
+  background: linear-gradient(#08ffe6, #fbe411, #a600ff);
+  animation: rotate 1.5s linear infinite;
+}
+
+
+@keyframes rotate {
+  0%{
+    filter: hue-rotate(0deg);
+  }
+  100%{
+    filter: hue-rotate(360deg);
+  }
+}
+@media (max-width: 640px){
+  .center{
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  .outer{
+    margin: 50px 0;
+  }
+}
+
+a
+{
+  position: relative;
+  padding: 20px 60px;
+  border-radius: 50px;
+  color: #151b38;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  background: #151b38;
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+a:hover {
+  color: var(--clr);
+  text-shadow: 0 0 15px var(--clr),
+  0 0 40px var(--clr);
+}
+
+a span {
+  position: relative;
+  z-index: 1;
+}
+
+a::before {
+  content: '';
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(var(--clr), transparent, transparent);
+  transition: 0.5s, top 0s, left 0s;
+  opacity: 0;
+}
+
+a:hover::before {
+opacity: 1; 
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #151b38;
+  border-radius: 256px;
 }
 
 h1 {
@@ -33,6 +204,22 @@ h4 {
     border-radius: 10px;
     color: #ffffff;
 }
+
+img {
+  /* clip-path: circle(40% at 50% 50%); */
+  border:5px solid #555;
+  display: block;
+  margin: left;
+  align-items: center;
+  height: 20vh;
+
+}
+
+.contact-container {
+  font-size: 144px;
+} 
+
+
 
 .mainBlock {
   padding: 10px;
@@ -142,7 +329,7 @@ h4 {
   margin-top: 60px;
   text-align: center;
 }
-.body {
+/* .body {
   color: white;
   font-family: "Work Sans", sans-serif;
   font-size: 20px;
@@ -151,9 +338,9 @@ h4 {
   margin: 30px auto;
   max-width: 600px;
   text-align: center;
-}
+} */
 
-.hamburger path {
+/* .hamburger path {
   transition: transform 300ms;
 }
 .hamburger path:nth-child(1) {
@@ -188,4 +375,4 @@ h4 {
 }
 .active .hamburger path:nth-child(5) {
   transform: rotate(-45deg);
-}
+} */
