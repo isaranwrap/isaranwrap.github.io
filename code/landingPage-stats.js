@@ -1,9 +1,7 @@
 // Select the buttons using a more specific selector (if possible)
 const buttons = document.querySelectorAll('.btn'); // Assuming single class
-
-const tracker = "html/tracker.html";
-const landingPage = "html/landingPage.html";
-// const landingPage = "../html/landingPage.html"; 
+// const landingPage = "html/landingPage.html";
+const landingPage = "../html/landingPage.html"; 
 // It may be a folder up (../ ) as well... so we'll figure out the logic for that :-)
 
 
@@ -15,6 +13,7 @@ buttons.forEach(button => {
       const icon = button.querySelector('.icon-clicked'); // Assuming icon within button
       const iconB = button.querySelector('.filter-blue'); // 1 sec here
       if (icon) icon.classList.toggle('icon-clicked');
+      console.log("Nice");
     }
   });
 });
@@ -71,7 +70,6 @@ button.addEventListener('click', function() {
 function checkAllGreen() {
   if (Array.from(blocks).every(block => block.style.backgroundColor === 'green')) {
     setTimeout(() => {
-      window.location.href = tracker; // This is the page we want to link towards
       window.location.href = landingPage; // This is the page we want to link towards
     }, 1500); // 2000 milliseconds = 2 seconds
   }
