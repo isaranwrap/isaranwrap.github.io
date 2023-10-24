@@ -26,6 +26,13 @@ html, body, span, button, center {
     justify-content: center;
   }
 
+.center .top {
+    display: flex;
+    text-align: stretch;
+    align-items: center;
+    justify-content: left;
+}
+
 .outer{
     position: relative;
     margin: 0 50px;

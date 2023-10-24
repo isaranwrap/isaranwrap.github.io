@@ -1,10 +1,129 @@
+html, body, span, button {
+    cursor: none;
+}
+
+.pie, .pie1, .pie2, .pie3 {
+    cursor: none;
+}
+
 body {
     padding: 0px;
     margin: 0;
     height: 100%;
     width: 100%;
-    background-image: url('../images/chess007.jpeg');
+    /* background-image: url('../images/nature-1.webp'); */
+    /* background-image: url('../images/nature-2.webp'); */
+    background-image: url('../images/nature-3.webp');
 	background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
 }
+
+.card {
+    position: relative;
+    width: 250px;
+    height: 250px;
+}
+
+.card .rating {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    /* background: #f00; */
+}
+
+.card .rating .block {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: black; /* This is the color that affects the progress Wheel */
+    left: 50%;
+    transform-origin: 50% 100px;
+    opacity: 0;
+    animation: animate 2s linear forwards;
+    /* transform: rotate(25deg); */
+}
+
+@keyframes animate {
+    to {
+        opacity: 1;
+    }
+}
+
+.block {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background: black; /* Initial color */
+    left: 50%;
+    transform-origin: 50% 100px;
+    opacity: 0;
+    animation: animate 2s linear forwards;
+    transition: background-color 0.5s ease; /* Animation for color change */
+}
+
+
+.btn {
+    position: absolute;
+    left: -50px;
+    top: 50px;
+    width: 7em;
+    height: 7em;
+    border-radius: 50%;
+    outline: none;
+    border: 4px #090909 solid;
+    background: linear-gradient(
+        145deg, #171717, #444245
+    );
+    box-shadow: inset 2px 2px 0px #7d7c7e,
+        inset -2px -2px 0px #1c1c1c;
+    color: #a6a6a6;
+    /* transform: translate(-50%, 50%); */
+}
+
+.btn span {
+    font-size: 2.9em;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: inherit;
+    background: linear-gradient(
+        145deg, #262626, #606060
+    );
+    width: 7.25em;
+    height: 7.25em;
+    z-index: -1;
+    box-shadow: 11px 11px 22px #141414,
+                -11px -11px 22px #525252;
+}
+
+.button-clicked {
+    background: linear-gradient(
+        -185deg, #131313, #444245;
+    );
+    box-shadow: inset -2px -2px 0px #5e5e5e,
+        inset 2px 2px 0px #1c1c1c;
+    color: rgb(135, 206, 235);
+}
+
+.button-hover {
+    background: #5e5e5e;
+}
+
+.icon-clicked {
+    /* color: #0fa; */
+    color: rgb(135, 206, 235);
+    text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+}
+
+/* This is the contact form which corresponds to */
+/* chessLandingPage-2.html */
+/* ../html/chessLandingPage-2.html */

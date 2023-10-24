@@ -88,30 +88,6 @@ body {
     }
 }
 
-/* .card .rating .block.green-spoke {
-    background-color: green;
-    box-shadow: 0 0 15px green, 0 0 15px #0f0;
-  }
-  
-  .card .rating .block.initial-green {
-    background: black;
-    box-shadow: 0 0 15px black, 0 0 20px #0f0;
-  } */
-/* .card .rating .block.active {
-    background: darkgreen;
-    box-shadow: 0 0 15px green, 0 0 30px #0f0;
-} */
-
-/* .card .rating .block:nth-child(-n+101) {
-    background: black;
-    box-shadow: 0 0 15px green, 0 0 15px #0f0;
-} */
-
-/* .card .rating .block:nth-child(-n+1) {
-    background: black;
-    box-shadow: 0 0 15px green, 0 0 20px #0f0;
-} */
-
 .block {
     position: absolute;
     width: 2px;
@@ -123,24 +99,6 @@ body {
     animation: animate 2s linear forwards;
     transition: background-color 0.5s ease; /* Animation for color change */
   }
-
-/* .card .rating .block:nth-child(-n+101) {
-    background: black;
-    box-shadow: 0 0 15px green, 0 0 20px #0f0;
-} */
-
-/* .card .rating h2 {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-size: 1.2em;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.5em;
-} */
-
 
 .circle-cursor {
     position: fixed;
@@ -214,9 +172,54 @@ body {
     0 0 10px #fff,
     0 0 21px #fff,
 }
+
+
+
+/* .card .rating .block.green-spoke {
+    background-color: green;
+    box-shadow: 0 0 15px green, 0 0 15px #0f0;
+  }
+  
+  .card .rating .block.initial-green {
+    background: black;
+    box-shadow: 0 0 15px black, 0 0 20px #0f0;
+  } */
+/* .card .rating .block.active {
+    background: darkgreen;
+    box-shadow: 0 0 15px green, 0 0 30px #0f0;
+} */
+
+/* .card .rating .block:nth-child(-n+101) {
+    background: black;
+    box-shadow: 0 0 15px green, 0 0 15px #0f0;
+} */
+
+/* .card .rating .block:nth-child(-n+1) {
+    background: black;
+    box-shadow: 0 0 15px green, 0 0 20px #0f0;
+} */
+
+/* .card .rating .block:nth-child(-n+101) {
+    background: black;
+    box-shadow: 0 0 15px green, 0 0 20px #0f0;
+} */
+
+/* .card .rating h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.5em;
+} */
+
 /* .icon-clicked {
     color: #fff;
     text-shadow: 0px 0px 15px #008ECE;
 } */
+
 
 /* https://css-tricks.com/how-to-create-neon-text-with-css/ */
