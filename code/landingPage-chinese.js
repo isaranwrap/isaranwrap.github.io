@@ -1,6 +1,6 @@
 // Select the buttons using a more specific selector (if possible)
 const buttons = document.querySelectorAll('.btn'); // Assuming single class
-const landingPage = "../html/landingPage.html";
+const landingPage = "../html/chinese.html";
 
 
 // Event listener for button click (combined and improved)
