@@ -2,56 +2,31 @@
 	<title> @isaranwrap - Ishan Saran</title>
 	<link href = "../css/style.css" type = "text/css" rel = "stylesheet">
 	<link href = "../css/landingPageStyle.css" type = "text/css" rel = "stylesheet">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 </head>
 
 
 <body style="width:120%;">
 	<div class="center">
 		<div class="outer button">
-		   <button>Chinese</button>
-		   <span></span>
-		   <span></span>
+			<button onclick="window.location.href='languagesLandingPage.html';">Learn a language</button>
+			
+			<!-- These empty spans correspond to the neon glowing transparent boxes -->
+			<span> <!--  --> </span> 
+			<span> <!--  --> </span>
 		</div>
 
 		<div class="outer button">
-			<button>Hindi</button>
+			<button onclick="window.location.href='chessLandingPage.html';">Learn chess!</button>
 			<span></span>
 			<span></span>
-		 </div>
+		</div>
 
-		 <div class="outer button" id = "ar">
-			<button>Arabic</button>
-			<span></span>
-			<span></span>
-		 </div>
-
-		 <div class="outer button">
-			<button>Spanish</button>
-			<span></span>
-			<span></span>
-		 </div>
-		 <div class="outer button">
-			<button>English</button>
-			<span></span>
-			<span></span>
-		 </div>
 	</div>
-
 	<!-- This is the script for the circular cursor -->
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-		  var circleCursor = document.createElement('div');
-		  circleCursor.className = 'circle-cursor';
-		  document.body.appendChild(circleCursor);
-		
-		  document.addEventListener('mousemove', function (e) {
-			circleCursor.style.left = e.clientX + 'px';
-			circleCursor.style.top = e.clientY + 'px';
-			circleCursor.style.display = 'block';
-			// document.removeEventListener('mousemove', this);
-		  });
-		});
-	</script>
+	<script src="../code/circleCursor.js"> </script>
+	<script src="../code/connectTheDots.js"> </script>
 </body>         
 
 

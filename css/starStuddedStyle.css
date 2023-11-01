@@ -29,7 +29,7 @@ html, body, span, button, center {
 .outer{
     position: relative;
     margin: 0 50px;
-    background: #d4af37;
+    background: darkgreen;
   }
   
 .button{
@@ -56,7 +56,7 @@ html, body, span, button, center {
     cursor: none;
   }
   .outer button{
-    background: linear-gradient(45deg, #C4B454, #C4B454);
+    background: linear-gradient(45deg, darkgreen, green);
     color: #f2f2f2;
     outline: none;
     border: none;
@@ -158,20 +158,6 @@ body {
     background-size: cover; */
 }
 
-/* See starspanged for the styling effects */
-/* .banner {
-  position: relative;
-}
-
-.banner #dotsCanvas {
-  position: absolute;
-  background-color: transparent;
-  top: -200;
-  left: 0;
-  width: 100%;
-  height: 100%;
-} */
-
 hr {
     border: none;
     border-top: 3px double #333;
@@ -261,6 +247,20 @@ nav {
     height: 100%;
     position: fixed;
     right: 0px;
+}
+
+.banner{
+  position: relative;
+  width: 120%;
+  height: 100%;
+}
+.banner #dotsCanvas{
+  position: absolute;
+  width: 120%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 nav ul {

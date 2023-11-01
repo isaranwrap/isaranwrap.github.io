@@ -29,7 +29,7 @@ html, body, span, button, center {
 .outer{
     position: relative;
     margin: 0 50px;
-    background: #d4af37;
+    background: darkgreen;
   }
   
 .button{
@@ -56,7 +56,7 @@ html, body, span, button, center {
     cursor: none;
   }
   .outer button{
-    background: linear-gradient(45deg, #C4B454, #C4B454);
+    background: linear-gradient(45deg, darkseagreen, darkolivegreen);
     color: #f2f2f2;
     outline: none;
     border: none;

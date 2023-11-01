@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<head> 
+	<title> @isaranwrap - Ishan Saran</title>
+	<link href = "css/style.css" type = "text/css" rel = "stylesheet">
+	<script src = "https://d3js.org/d3.v3.min.js"></script>
+	<script src = "https://unpkg.com/react@18.1.0/umd/react.production.min.js"></script>
+	<script src = "https://kit.fontawesome.com/fd3faaa138.js" crossorigin="anonymous"></script>
+	<!-- <script src = "https://d3js.org/d3.v3.min.js"></script> -->
+	<!-- <script src = "https://unpkg.com/react@18.1.0/umd/react.production.min.js"></script> -->
+	<!-- <script src = "https://kit.fontawesome.com/fd3faaa138.js" crossorigin="anonymous"></script>  -->
+</head>
+<!-- 
+<a href = "https://github.com/isaranwrap/StandardizingAKI"> jj
+	<div id="flaggerLogo"> <img width=132 height=144 src="images/07hexlogo.png" style = "float: left"></div>
+</a> -->
+
+<body>
+
+	<div class="card">
+		<div class="rating">
+			<div class="block">
+				<button class="btn"> <!-- onclick="ani()" -->
+				<span class="material-icons-outlined"><i class='fas fa-fingerprint'></i></span>
+				<!-- <span class="material-icons-outlined"><img src="images/fingerprint-svg.svg" class="center filter-blue"></span> -->
+				 <!-- <span class="material-icons-outlined"><img src="images/fingerprint-svg.svg" class="center filter-blue"></span> -->
+				</button>
+			</div>
+		</div>
+	</div>
+
+		<!-- <div class="rating">
+		  <h2><span class="counter" data-target="50">50</span><sup>%</sup><br>HTML</h2>
+		  <div class="block"></div>
+	  </div>
+	</div> -->
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		  var circleCursor = document.createElement('div');
+		  circleCursor.className = 'circle-cursor';
+		  document.body.appendChild(circleCursor);
+		
+		  document.addEventListener('mousemove', function (e) {
+			circleCursor.style.left = e.clientX + 'px';
+			circleCursor.style.top = e.clientY + 'px';
+			circleCursor.style.display = 'block';
+			// document.removeEventListener('mousemove', this);
+		  });
+		});
+	</script>
+
+	<script>
+		const rating = document.getElementsByClassName('rating')[0];
+		const block = document.getElementsByClassName('block');
+
+		for (var i = 1; i < 100; i++){
+		rating.innerHTML += "<div class='block'></div>";
+		block[i].style.transform = "rotate("+ 3.6 * i + "deg)";
+		block[i].style.animationDelay = `${i/40}s`; 
+		}
+	</script>
+
+	<script src = "code/landingPage.js"></script>
+</body>
+

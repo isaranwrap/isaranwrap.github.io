@@ -1,22 +1,14 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
 body {
-    background: linear-gradient(
-        90deg, rgba(46, 44, 45, 1) 0%,
-        rgba(66, 64, 67, 1) 100%
-    );
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+	/* background-color: #A7A7A9; */
+/*	background-color: #6F6FAE; */
+    background-image: url("../images/chess007.jpeg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: #f6c556;
 }
 
 html, body, span, button {
     cursor: none;
-}
-
-.card {
-    z-index:100;
 }
 
 /* .center {
@@ -47,7 +39,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: radial-gradient(#444,#222);
+    /* background: radial-gradient(#444,#222); */
 }
 
 .card {
@@ -100,11 +92,6 @@ body {
 /* .card .rating .block.active {
     background: darkgreen;
     box-shadow: 0 0 15px green, 0 0 30px #0f0;
-} */
-
-/* .card .rating .block:nth-child(-n+101) {
-    background: black;
-    box-shadow: 0 0 15px green, 0 0 15px #0f0;
 } */
 
 /* .card .rating .block:nth-child(-n+1) {
