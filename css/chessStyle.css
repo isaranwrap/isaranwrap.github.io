@@ -11,6 +11,12 @@ html, body, span, button {
     cursor: none;
 }
 
+/* Might want to look into bolding price text later */
+tspan {
+    font: bold;
+}
+/*  */
+
 /* .center {
     display: block;
     margin-left: auto;
