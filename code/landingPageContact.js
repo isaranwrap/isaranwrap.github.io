@@ -1,9 +1,7 @@
 // Select the buttons using a more specific selector (if possible)
 const buttons = document.querySelectorAll('.btn'); // Assuming single class
-const landingPage = "html/landingPage.html";
-// const landingPage = "../html/landingPage.html"; 
-// It may be a folder up (../ ) as well... so we'll figure out the logic for that :-)
-
+const landingPage = "contactMe-2.html";
+const COLOR = "white";
 
 // Event listener for button click (combined and improved)
 buttons.forEach(button => {
@@ -29,12 +27,12 @@ buttons.forEach(button => {
 
 const button = document.querySelector('.btn'); 
 const blocks = document.querySelectorAll('.block');
-let isGreen = false;
+let isPurp = false;
 let timeouts = []; // Array to store timeouts
 
 button.addEventListener('click', function() {
-  isGreen = !isGreen;
-  const color = isGreen ? 'green' : 'black';
+  isPurp = !isPurp;
+  const color = isPurp ? COLOR : 'black';
 
   // Clear existing timeouts
   timeouts.forEach(clearTimeout);
@@ -52,13 +50,13 @@ button.addEventListener('click', function() {
   blocks.forEach((block, index) => {
     const timeout = setTimeout(() => {
       block.style.backgroundColor = color;
-      if (color === 'green') {
-        block.style.boxShadow = '0 0 15px green, 0 0 15px #0f0';
+      if (color === COLOR) {
+        block.style.boxShadow = '0 0 15px purple, 0 0 15px #bf00bf';
       } else {
         block.style.boxShadow = 'none'; // Ensure shadow is removed when turning black
       }
       if (index === blocks.length - 1) {
-        checkAllGreen();
+        checkAllColor();
       }
     }, delayIncrement * index);
     timeouts.push(timeout); // Store timeout for clearing
@@ -66,8 +64,8 @@ button.addEventListener('click', function() {
 });
 
 
-function checkAllGreen() {
-  if (Array.from(blocks).every(block => block.style.backgroundColor === 'green')) {
+function checkAllColor() {
+  if (Array.from(blocks).every(block => block.style.backgroundColor === COLOR)) {
     setTimeout(() => {
       window.location.href = landingPage; // This is the page we want to link towards
     }, 1500); // 2000 milliseconds = 2 seconds
