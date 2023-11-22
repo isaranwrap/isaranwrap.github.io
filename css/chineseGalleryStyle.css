@@ -24,13 +24,15 @@ body {
     cursor: pointer;
 }
 
+.gallery img:not(:hover) {
+    filter: grayscale(10%);
+}
+
 .gallery img:hover {
     transform: scale(1.2) rotate(-15deg);
     border-radius: 20px;
     box-shadow: 0 12px 7px gray;
 }
-
-
 
 .enlarged {
     display: none;
