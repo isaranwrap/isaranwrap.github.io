@@ -124,6 +124,16 @@ body {
     0 0 21px #fff,
 }
 
+a {
+    text-decoration: none;
+    color: palegoldenrod;
+    cursor: inherit;
+    /* text-shadow: 0 0 7px #525252, */
+    0 0 7px #525252,
+    0 0 10px royalblue,
+    0 0 21px rosybrown;
+}
+
 /* This is the contact form which corresponds to */
 /* chessLandingPage-2.html */
 /* ../html/chessLandingPage-2.html */

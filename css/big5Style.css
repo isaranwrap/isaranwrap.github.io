@@ -1,0 +1,51 @@
+
+
+#spanish {
+    color: #ff5733;
+}
+
+#english {
+    color: aliceblue;
+}
+
+#spanish-fin {
+    padding: 50px 50px 50px 50px;
+    background: linear-gradient(45deg, darkseagreen, #C4B454);
+    color: #f2f2f2;
+    outline: none;
+    border: none;
+    /* font-size: 20px; */
+    z-index: 9;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: none;
+}
+#spanish-fin:hover {
+    color: antiquewhite;
+    background: linear-gradient(#14ffe9, #ffeb3b, #ff00e0);
+    animation: rotate 1.5s linear infinite;
+    
+}
+
+@keyframes rotate {
+    0%{
+      filter: hue-rotate(0deg);
+    }
+    100%{
+      filter: hue-rotate(360deg);
+    }
+  }
+  @media (max-width: 640px){
+    .center{
+      flex-wrap: wrap;
+      flex-direction: column;
+    }
+    .outer{
+      margin: 50px 0;
+    }
+  }
+
+/* .outer:hover{
+    background: linear-gradient(#14ffe9, #ffeb3b, #ff00e0);
+    animation: rotate 1.5s linear infinite;
+  } */

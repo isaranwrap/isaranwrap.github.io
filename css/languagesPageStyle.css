@@ -102,7 +102,7 @@ html, body, span, button, center {
     filter: blur(14px);
   }
   .outer:hover{
-    background: linear-gradient(#14ffe9, #ffeb3b, #ff00e0);
+    background: linear-gradient(#08ffe6, #fbe411, #a600ff);
     animation: rotate 1.5s linear infinite;
   }
 
