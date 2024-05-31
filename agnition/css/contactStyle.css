@@ -1,0 +1,64 @@
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.canvas {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px; /* Adds perspective for 3D effect */
+}
+
+.hexagon-grid {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    transform: rotateX(15deg); /* Tilt the whole grid */
+    transform-style: preserve-3d;
+}
+
+.hexagon {
+    position: relative;
+    width: 100px;
+    height: 57.74px; /* Adjust height to maintain hexagon shape */
+    margin: 0 5px;
+    background-color: #4a90e2;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    transform: rotateX(10deg); /* Slight tilt effect */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.hexagon:nth-child(even) {
+    margin-top: 28.87px; /* Offset every other hexagon to create a grid effect */
+}
+
+.hexagon:before,
+.hexagon:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+}
+
+.hexagon:before {
+    bottom: 100%;
+    border-bottom: 28.87px solid #4a90e2;
+}
+
+.hexagon:after {
+    top: 100%;
+    border-top: 28.87px solid #4a90e2;
+}
+
