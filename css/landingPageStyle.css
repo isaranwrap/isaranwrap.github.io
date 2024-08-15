@@ -27,11 +27,28 @@ html, body, span, button, center {
   }
 
 .outer{
+    display: flex;
     position: relative;
     margin: 0 50px;
     background: darkgreen;
   }
   
+#Pencil {
+  display: flex;
+  flex-wrap: wrap;
+  transform: translate(0px, -25px) rotate(225deg);
+  /* transform: translate(-100px, 0px); */
+}
+
+#Knight {
+  display: flex;
+  transform: translate(-60px,-260px);
+}
+  /* .outer img {
+    width: 150px;
+    height: 150px;
+  } */
+
 .button{
     height: 70px;
     width: 220px;
