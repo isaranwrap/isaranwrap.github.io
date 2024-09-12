@@ -1,0 +1,59 @@
+/* * {
+	box-sizing: border-box;
+} */
+
+body {
+  background: #CD5C5C;
+}
+
+/* Blog Number */
+#b1 {
+    background: #CD5C5C;
+}
+
+#b2 {
+    background: #BDB76B;
+}
+
+#b3 {
+    background: #DDA0DD;
+}
+
+hr {
+    border-color: black;
+}
+
+/* body {
+    background: #BDB76B;
+} */
+
+/* 
+Some good colors to start with
+
+#FFFFE0	
+
+#FFFACD	
+
+#FAFAD2	
+
+#FFEFD5	
+
+#FFE4B5	
+
+#FFDAB9
+
+#EEE8AA
+
+#F0E68C
+
+#BDB76B
+
+#FFE4B5	
+
+#E6E6FA	
+
+#D8BFD8	
+
+#DDA0DD	
+
+*/
