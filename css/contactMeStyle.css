@@ -224,7 +224,6 @@ img {
 
 
 img:hover {
-  background-image: url('../images/profilePic-green.jpg');
   filter: none;
   border: none;
 }

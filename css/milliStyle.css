@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+
+body {
+	/* background-color: #A7A7A9; */
+/*	background-color: #6F6FAE; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+/* background: radial-gradient(#444,#222); */
+    background-image: url("../images/chess007.jpeg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: #f6c556;
+}
+
+html, body, span, button {
+    cursor: none;
+}
+
+
+img:hover {
+    width: 1440px;
+    height: 960px;
+    border: 2px solid saddlebrown;
+    box-shadow: 0 0 15px black, 0 0 20px #000020;
+}
