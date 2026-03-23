@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📝 Simple To-Do Log</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --accent: #4f46e5;
+    --border: #e5e7eb;
+    --danger: #dc2626;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  main { max-width: 680px; margin: 2rem auto; padding: 0 1rem 3rem; }
+  h1 { font-size: 1.6rem; margin: 0 0 1rem; }
+  h2 { font-size: 1.05rem; margin: 1.75rem 0 .5rem; }
+  .toolbar { display: flex; justify-content: space-between; align-items: center; margin-top: 1.75rem; }
+  .toolbar h2 { margin: 0; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+  }
+  form { display: flex; gap: .5rem; }
+  input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: .6rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  button {
+    padding: .6rem .9rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-size: .95rem;
+    cursor: pointer;
+  }
+  button:hover { filter: brightness(1.08); }
+  button.ghost { background: transparent; color: var(--muted); padding: .2rem .4rem; font-size: 1.05rem; }
+  button.ghost:hover { color: var(--danger); filter: none; }
+  button.secondary { background: #eef2ff; color: var(--accent); }
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: .7rem .1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .item:last-child { border-bottom: none; }
+  .item input[type="checkbox"] {
+    margin-top: .35rem;
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .task-body { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .task-text.done { text-decoration: line-through; color: var(--muted); }
+  .meta {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: .25rem;
+  }
+  .empty { color: var(--muted); font-style: italic; margin: .5rem 0; }
+  .tag {
+    flex-shrink: 0;
+    font-size: .75rem;
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    margin-top: .15rem;
+    white-space: nowrap;
+  }
+  .footer-note { font-size: .8rem; color: var(--muted); margin-top: 1rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>📝 Simple To-Do Log</h1>
+
+  <section class="card">
+    <form id="new-task" autocomplete="off">
+      <input type="text" id="task-input" placeholder="What do you need to do? ✍️" aria-label="New task" maxlength="200" required>
+      <button type="submit">➕ Add</button>
+    </form>
+  </section>
+
+  <h2 id="todo-title">To do</h2>
+  <section class="card" id="todo-list"></section>
+
+  <h2 id="done-title">✅ Completed</h2>
+  <section class="card" id="done-list"></section>
+
+  <div class="toolbar">
+    <h2>📜 Activity log</h2>
+    <button class="secondary" id="export-btn">⬇️ Export JSON</button>
+  </div>
+  <section class="card" id="log"></section>
+
+  <p class="footer-note">
+    💾 Saved automatically in this browser. Timestamps are stored as UTC ISO 8601 with milliseconds;
+    the readable version is shown in your local timezone.
+  </p>
+</main>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'simple-todo-log-v1';
+  const ICONS = { created: '➕', completed: '✅', reopened: '↩️', deleted: '🗑️' };
+  const readable = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'medium' });
+
+  // Data shape:
+  // { tasks: [{ id, text, createdAt, completedAt }],
+  //   log:   [{ at, action, taskId, text }] }
+  let state = load();
+
+  function load() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (parsed && Array.isArray(parsed.tasks) && Array.isArray(parsed.log)) return parsed;
+    } catch (err) {
+      console.warn('Could not read saved data; starting fresh.', err);
+    }
+    return { tasks: [], log: [] };
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (err) {
+      alert('Could not save your changes: ' + err.message);
+    }
+  }
+
+  // Example output: "2026-10-20T14:32:05.123Z" (exact, to the millisecond, in UTC)
+  const now = () => new Date().toISOString();
+  const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  const stamp = iso => `${iso}  (${readable.format(new Date(iso))})`;
+
+  // Small DOM helper: builds elements and inserts text safely (no innerHTML).
+  function el(tag, attrs = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, value);
+    node.append(...children);
+    return node;
+  }
+
+  function record(action, task, at = now()) {
+    state.log.push({ at, action, taskId: task.id, text: task.text });
+  }
+
+  function addTask(text) {
+    const at = now();
+    const task = { id: newId(), text, createdAt: at, completedAt: null };
+    state.tasks.push(task);
+    record('created', task, at);
+    update();
+  }
+
+  function toggleTask(id) {
+    const task = state.tasks.find(t => t.id === id);
+    if (!task) return;
+    const at = now(); // one timestamp shared by the task field and the log entry
+    if (task.completedAt) {
+      task.completedAt = null;
+      record('reopened', task, at);
+    } else {
+      task.completedAt = at;
+      record('completed', task, at);
+    }
+    update();
+  }
+
+  function deleteTask(id) {
+    const task = state.tasks.find(t => t.id === id);
+    if (!task || !confirm(`Delete "${task.text}"? It will stay in the activity log.`)) return;
+    state.tasks = state.tasks.filter(t => t.id !== id);
+    record('deleted', task);
+    update();
+  }
+
+  function taskRow(task) {
+    const done = Boolean(task.completedAt);
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = done;
+    checkbox.setAttribute('aria-label', done ? 'Mark as not done' : 'Mark as done');
+    checkbox.addEventListener('change', () => toggleTask(task.id));
+
+    const meta = el('div', { class: 'meta' }, `created   ${stamp(task.createdAt)}`);
+    if (done) meta.append(el('br'), `completed ${stamp(task.completedAt)}`);
+
+    const body = el('div', { class: 'task-body' },
+      el('div', { class: done ? 'task-text done' : 'task-text' }, task.text),
+      meta);
+
+    const del = el('button', { class: 'ghost', title: 'Delete task', 'aria-label': 'Delete task' }, '🗑️');
+    del.addEventListener('click', () => deleteTask(task.id));
+
+    return el('div', { class: 'item' }, checkbox, body, del);
+  }
+
+  function logRow(entry) {
+    return el('div', { class: 'item' },
+      el('span', { class: 'tag' }, `${ICONS[entry.action] ?? '•'} ${entry.action}`),
+      el('div', { class: 'task-body' },
+        el('div', {}, entry.text),
+        el('div', { class: 'meta' }, stamp(entry.at))));
+  }
+
+  function fill(id, nodes, emptyText) {
+    const box = document.getElementById(id);
+    box.replaceChildren(...(nodes.length ? nodes : [el('p', { class: 'empty' }, emptyText)]));
+  }
+
+  function render() {
+    const pending = state.tasks.filter(t => !t.completedAt);
+    // ISO 8601 UTC strings of the same format sort chronologically as plain text.
+    const finished = state.tasks
+      .filter(t => t.completedAt)
+      .sort((a, b) => b.completedAt.localeCompare(a.completedAt));
+
+    document.getElementById('todo-title').textContent = `To do (${pending.length})`;
+    document.getElementById('done-title').textContent = `✅ Completed (${finished.length})`;
+
+    fill('todo-list', pending.map(taskRow), '🎉 Nothing left to do. Add something above!');
+    fill('done-list', finished.map(taskRow), 'Completed tasks will show up here.');
+    fill('log', [...state.log].reverse().map(logRow), 'No activity yet.');
+  }
+
+  function update() {
+    save();
+    render();
+  }
+
+  document.getElementById('new-task').addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.getElementById('task-input');
+    const text = input.value.trim();
+    if (!text) return;
+    addTask(text);
+    input.value = '';
+    input.focus();
+  });
+
+  document.getElementById('export-btn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = el('a', { href: url, download: `todo-log-${now().replace(/[:.]/g, '-')}.json` });
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
