@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100-Node Snake Graph</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        #graph-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            position: relative;
+        }
+
+        /* SVG Styles */
+        .edge {
+            stroke: #888;
+            stroke-width: 2;
+        }
+        
+        .node {
+            fill: lightgreen;
+            stroke: #2f4f4f;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: fill 0.2s, r 0.2s;
+        }
+        
+        .node:hover {
+            fill: #4caf50;
+            stroke-width: 3;
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: bold;
+            fill: #333;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none; /* Let hover events pass through to the circle */
+        }
+
+        /* Tooltip Styles */
+        #tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Interactive Snake-like Chain Graph</h2>
+    
+    <div id="graph-container">
+        <div id="tooltip"></div>
+        <!-- The SVG canvas where the graph will be drawn -->
+        <svg id="graph" width="600" height="600"></svg>
+    </div>
+
+    <script>
+        const svg = document.getElementById('graph');
+        const tooltip = document.getElementById('tooltip');
+        
+        const numNodes = 100;
+        const cols = 10;
+        const spacing = 55; // Distance between nodes
+        const padding = 52; // Margin inside the SVG
+        
+        const positions = [];
+
+        // 1. Calculate node positions (Snake-like grid)
+        for (let i = 0; i < numNodes; i++) {
+            let row = Math.floor(i / cols);
+            let col = i % cols;
+            
+            // Even rows: left-to-right. Odd rows: right-to-left
+            let gridX = (row % 2 === 0) ? col : (cols - 1 - col);
+            let gridY = row;
+            
+            positions.push({
+                id: i,
+                x: padding + (gridX * spacing),
+                y: padding + (gridY * spacing)
+            });
+        }
+
+        // 2. Draw Edges (Lines between sequential nodes)
+        for (let i = 0; i < numNodes - 1; i++) {
+            let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', positions[i].x);
+            line.setAttribute('y1', positions[i].y);
+            line.setAttribute('x2', positions[i+1].x);
+            line.setAttribute('y2', positions[i+1].y);
+            line.setAttribute('class', 'edge');
+            svg.appendChild(line);
+        }
+
+        // 3. Draw Nodes and Labels
+        positions.forEach(pos => {
+            // Group to hold circle and text together
+            let g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            // Create Circle
+            let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', pos.x);
+            circle.setAttribute('cy', pos.y);
+            circle.setAttribute('r', 16);
+            circle.setAttribute('class', 'node');
+            
+            // Tooltip Interactions
+            circle.addEventListener('mouseover', (e) => {
+                tooltip.style.opacity = 1;
+                tooltip.innerHTML = `<strong>Node ${pos.id}</strong><br>Grid: (${Math.floor(pos.id/10)}, ${pos.id%10})`;
+            });
+            
+            circle.addEventListener('mousemove', (e) => {
+                // Position tooltip relative to the mouse
+                const containerRect = document.getElementById('graph-container').getBoundingClientRect();
+                tooltip.style.left = (e.clientX - containerRect.left + 15) + 'px';
+                tooltip.style.top = (e.clientY - containerRect.top + 15) + 'px';
+            });
+            
+            circle.addEventListener('mouseout', () => {
+                tooltip.style.opacity = 0;
+            });
+
+            // Create Text Label
+            let text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', pos.x);
+            text.setAttribute('y', pos.y);
+            text.setAttribute('class', 'label');
+            text.textContent = pos.id;
+
+            // Append to SVG
+            g.appendChild(circle);
+            g.appendChild(text);
+            svg.appendChild(g);
+        });
+    </script>
+
+</body>
+</html>
