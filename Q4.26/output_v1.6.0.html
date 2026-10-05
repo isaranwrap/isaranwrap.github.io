@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Force-Directed Graph</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+        }
+        #graph-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        .link {
+            stroke: #475569;
+            transition: stroke-opacity 0.25s, stroke-width 0.25s;
+        }
+        .node {
+            stroke: #0f172a;
+            stroke-width: 2px;
+            cursor: grab;
+            transition: stroke-width 0.2s, stroke 0.2s, r 0.2s, opacity 0.25s, fill 0.3s;
+        }
+        .node:active {
+            cursor: grabbing;
+        }
+        .node.fixed {
+            stroke: #f43f5e;
+            stroke-width: 4px;
+        }
+        .node-label {
+            font-size: 10px;
+            font-weight: bold;
+            fill: #ffffff;
+            pointer-events: none;
+            text-anchor: middle;
+            alignment-baseline: middle;
+            transition: opacity 0.25s;
+        }
+        #ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            backdrop-filter: blur(8px);
+            pointer-events: auto;
+            z-index: 10;
+            width: 320px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="graph-container">
+        <div id="ui-overlay">
+            <h1 class="text-lg font-bold mb-2 text-white flex items-center gap-2">
+                <span>🌐</span> Interactive Network
+            </h1>
+            <div class="mb-3">
+                <label class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Find Node</label>
+                <input id="search-input" type="text" placeholder="Search by ID (e.g. Node 5)" class="w-full px-2.5 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-md text-white focus:outline-none focus:border-indigo-500 transition" />
+            </div>
+            <div class="mb-3">
+                <label class="block text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Color Palette</label>
+                <select id="palette-select" class="w-full px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-md text-white focus:outline-none focus:border-indigo-500 transition">
+                    <option value="tableau">Classic Tableau</option>
+                    <option value="ocean">Ocean Breeze (Teals/Blues)</option>
+                    <option value="neon">Retro Neon (Vibrant Pinks)</option>
+                    <option value="sunset">Warm Sunset (Reds/Oranges)</option>
+                </select>
+            </div>
+            <div id="stats-card" class="mb-3 p-2.5 bg-slate-800/80 border border-slate-700 rounded-lg text-xs">
+                <h3 class="font-bold text-indigo-400 mb-1.5 flex items-center gap-1">
+                    <span>📊</span> Global Network Stats
+                </h3>
+                <div class="grid grid-cols-2 gap-y-1.5 gap-x-1 text-[11px] text-slate-300">
+                    <div>Density: <span id="stat-density" class="font-semibold text-white">-</span></div>
+                    <div>Avg Degree: <span id="stat-avg-degree" class="font-semibold text-white">-</span></div>
+                    <div class="col-span-2">Connected Components: <span id="stat-components" class="font-semibold text-emerald-400">-</span></div>
+                </div>
+            </div>
+            <div id="inspector-card" class="mb-3 p-2.5 bg-slate-800 border border-slate-700 rounded-lg text-xs hidden">
+                <h3 class="font-bold text-indigo-400 mb-1 flex justify-between items-center">
+                    <span>🔍 Inspector</span>
+                    <span id="insp-id" class="text-slate-300">Node 0</span>
+                </h3>
+                <div class="grid grid-cols-2 gap-1 text-[11px] text-slate-300">
+                    <div>Group: <span id="insp-group" class="font-semibold text-white">-</span></div>
+                    <div>Links: <span id="insp-links" class="font-semibold text-white">-</span></div>
+                </div>
+            </div>
+            <div class="mb-4 p-2.5 bg-slate-800/50 border border-slate-750 rounded-lg space-y-3">
+                <h3 class="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
+                    <span>⚡</span> Physics Configurator
+                </h3>
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between text-[11px] text-slate-300">
+                        <span>Link Distance</span>
+                        <span id="dist-val" class="font-semibold text-white">70px</span>
+                    </div>
+                    <input id="dist-slider" type="range" min="20" max="200" value="70" class="w-full accent-indigo-500 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer" />
+                </div>
+                <div class="space-y-1.5 text-xs">
+                    <div class="flex justify-between text-[11px] text-slate-300">
+                        <span>Node Repulsion</span>
+                        <span id="rep-val" class="font-semibold text-white">-200</span>
+                    </div>
+                    <input id="rep-slider" type="range" min="50" max="500" value="200" class="w-full accent-indigo-500 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer" />
+                </div>
+            </div>
+            <ul class="text-xs space-y-1.5 text-slate-300">
+                <li class="flex items-center gap-2">
+                    <span class="inline-block w-3.5 h-3.5 bg-blue-500 rounded-full"></span>
+                    <span>Drag & Drop to position & freeze nodes.</span>
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="inline-block w-3.5 h-3.5 border-2 border-rose-500 bg-slate-900 rounded-full"></span>
+                    <span>Click a node to unfreeze / release it.</span>
+                </li>
+            </ul>
+            <div class="mt-3 pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between">
+                <span>⌨️ Shortcuts:</span>
+                <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded">R</kbd> Reset</span>
+                <span><kbd class="px-1.5 py-0.5 bg-slate-800 rounded">E</kbd> Export</span>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-700 space-y-2">
+                <div class="flex justify-between items-center gap-2">
+                    <button id="detect-btn" class="w-full py-1.5 bg-amber-600 hover:bg-amber-500 transition text-white text-xs font-bold rounded-md shadow-md">✨ Detect Communities</button>
+                </div>
+                <div class="flex justify-between items-center pt-1">
+                    <span class="text-xs font-semibold text-slate-400">Layout</span>
+                    <button id="reset-btn" class="px-2.5 py-1 bg-slate-700 hover:bg-slate-600 transition text-white text-xs font-semibold rounded-md">Reset</button>
+                </div>
+                <div class="flex justify-between items-center gap-2 pt-1">
+                    <span class="text-xs font-semibold text-slate-400">Data Portability</span>
+                    <div class="flex gap-1">
+                        <button id="export-btn" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 transition text-white text-xs font-semibold rounded-md">Export</button>
+                        <button id="import-trigger-btn" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 transition text-white text-xs font-semibold rounded-md">Import</button>
+                        <input id="import-file-input" type="file" accept="application/json" class="hidden" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <svg id="network" class="w-full h-full"></svg>
+    </div>
+    <script>
+        const generateData = () => {
+            const numNodes = 40;
+            const nodes = Array.from({ length: numNodes }, (_, i) => ({
+                id: `Node ${i}`,
+                group: Math.floor(Math.random() * 5)
+            }));
+            const links = [];
+            for (let i = 1; i < numNodes; i++) {
+                const target = Math.floor(Math.random() * i);
+                links.push({
+                    source: nodes[i].id,
+                    target: nodes[target].id,
+                    weight: Math.floor(Math.random() * 5) + 1
+                });
+                if (Math.random() > 0.8) {
+                    const extraTarget = Math.floor(Math.random() * numNodes);
+                    if (extraTarget !== i) {
+                        links.push({
+                            source: nodes[i].id,
+                            target: nodes[extraTarget].id,
+                            weight: Math.floor(Math.random() * 5) + 1
+                        });
+                    }
+                }
+            }
+            return { nodes, links };
+        };
+        let graphData = generateData();
+        const container = document.getElementById('graph-container');
+        const svg = d3.select("#network");
+        let width = container.clientWidth || window.innerWidth;
+        let height = container.clientHeight || window.innerHeight;
+        svg.attr("viewBox", [0, 0, width, height]);
+        const palettes = {
+            tableau: d3.scaleOrdinal(d3.schemeTableau10),
+            ocean: d3.scaleOrdinal(["#0f766e", "#0d9488", "#14b8a6", "#5eead4", "#2dd4bf"]),
+            neon: d3.scaleOrdinal(["#ec4899", "#d946ef", "#a855f7", "#818cf8", "#c084fc"]),
+            sunset: d3.scaleOrdinal(["#be123c", "#f43f5e", "#fb7185", "#f59e0b", "#e11d48"])
+        };
+        let currentPalette = "tableau";
+        function getColor(group) {
+            return palettes[currentPalette](group);
+        }
+        function getLinkStrokeWidth(d) {
+            return 1 + (d.weight || 1) * 0.9;
+        }
+        function getLinkOpacity(d) {
+            return 0.3 + (d.weight || 1) * 0.13;
+        }
+        const g = svg.append("g");
+        const zoomBehavior = d3.zoom()
+            .scaleExtent([0.1, 8])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        svg.call(zoomBehavior);
+        let simulation, link, nodeGroup, node;
+        let currentDistance = 70;
+        let currentRepulsion = -200;
+
+        function calculateGlobalStats() {
+            const N = graphData.nodes.length;
+            const E = graphData.links.length;
+            const density = N > 1 ? (2 * E) / (N * (N - 1)) : 0;
+            const avgDegree = N > 0 ? (2 * E) / N : 0;
+
+            const adj = {};
+            graphData.nodes.forEach(n => adj[n.id] = []);
+            graphData.links.forEach(l => {
+                const s = l.source.id || l.source;
+                const t = l.target.id || l.target;
+                if (adj[s]) adj[s].push(t);
+                if (adj[t]) adj[t].push(s);
+            });
+            const visited = new Set();
+            let componentsCount = 0;
+            graphData.nodes.forEach(n => {
+                if (!visited.has(n.id)) {
+                    componentsCount++;
+                    const queue = [n.id];
+                    visited.add(n.id);
+                    while (queue.length > 0) {
+                        const curr = queue.shift();
+                        (adj[curr] || []).forEach(neighbor => {
+                            if (!visited.has(neighbor)) {
+                                visited.add(neighbor);
+                                queue.push(neighbor);
+                            }
+                        });
+                    }
+                }
+            });
+
+            document.getElementById("stat-density").innerText = density.toFixed(3);
+            document.getElementById("stat-avg-degree").innerText = avgDegree.toFixed(2);
+            document.getElementById("stat-components").innerText = componentsCount;
+        }
+
+        // Client-side Label Propagation Community Detection Algorithm
+        function detectCommunities() {
+            const nodes = graphData.nodes;
+            const links = graphData.links;
+            
+            // Initialize each node with its own label
+            const labels = {};
+            nodes.forEach(n => {
+                labels[n.id] = n.id;
+            });
+
+            // Build adjacency lists
+            const adj = {};
+            nodes.forEach(n => adj[n.id] = []);
+            links.forEach(l => {
+                const s = l.source.id || l.source;
+                const t = l.target.id || l.target;
+                if (adj[s]) adj[s].push(t);
+                if (adj[t]) adj[t].push(s);
+            });
+
+            // Run Label Propagation iterations
+            const iterations = 10;
+            for (let iter = 0; iter < iterations; iter++) {
+                // Shuffle nodes array to avoid ordering bias
+                const shuffledNodes = [...nodes].sort(() => Math.random() - 0.5);
+                shuffledNodes.forEach(node => {
+                    const neighbors = adj[node.id] || [];
+                    if (neighbors.length === 0) return;
+                    
+                    // Count frequencies of neighbors' labels
+                    const counts = {};
+                    neighbors.forEach(neighId => {
+                        const label = labels[neighId];
+                        counts[label] = (counts[label] || 0) + 1;
+                    });
+                    
+                    // Find label with highest frequency
+                    let maxLabel = labels[node.id];
+                    let maxCount = 0;
+                    for (const label in counts) {
+                        if (counts[label] > maxCount) {
+                            maxCount = counts[label];
+                            maxLabel = label;
+                        }
+                    }
+                    labels[node.id] = maxLabel;
+                });
+            }
+
+            // Map final unique string labels to group integer indexes [0, 1, 2...]
+            const uniqueLabels = [...new Set(Object.values(labels))];
+            nodes.forEach(n => {
+                n.group = uniqueLabels.indexOf(labels[n.id]) % 10;
+            });
+
+            // Trigger visual transitions of node colors
+            node.transition().duration(600).attr("fill", d => getColor(d.group));
+        }
+
+        document.getElementById("detect-btn").addEventListener("click", detectCommunities);
+
+        function updateNetwork() {
+            g.selectAll("*").remove();
+            simulation = d3.forceSimulation(graphData.nodes)
+                .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(currentDistance))
+                .force("charge", d3.forceManyBody().strength(currentRepulsion))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collide", d3.forceCollide().radius(22));
+            link = g.append("g")
+                .attr("class", "links")
+                .selectAll("line")
+                .data(graphData.links)
+                .join("line")
+                .attr("class", "link")
+                .style("stroke-width", d => getLinkStrokeWidth(d))
+                .style("stroke-opacity", d => getLinkOpacity(d));
+            nodeGroup = g.append("g")
+                .attr("class", "nodes")
+                .selectAll("g")
+                .data(graphData.nodes)
+                .join("g")
+                .call(drag(simulation))
+                .on("click", clickToToggleFix)
+                .on("mouseenter", handleMouseOver)
+                .on("mouseleave", handleMouseOut);
+            node = nodeGroup.append("circle")
+                .attr("class", "node")
+                .attr("r", 14)
+                .attr("fill", d => getColor(d.group));
+            node.classed("fixed", d => d.fx !== null && d.fx !== undefined);
+            nodeGroup.append("text")
+                .attr("class", "node-label")
+                .text(d => d.id.split(' ')[1]);
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+                nodeGroup
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+            calculateGlobalStats();
+        }
+        function handleMouseOver(event, hoveredNode) {
+            const adjacentNodes = new Set();
+            adjacentNodes.add(hoveredNode.id);
+            let edgeCount = 0;
+            link.each(d => {
+                if (d.source.id === hoveredNode.id) {
+                    adjacentNodes.add(d.target.id);
+                    edgeCount++;
+                }
+                if (d.target.id === hoveredNode.id) { 
+                    adjacentNodes.add(d.source.id);
+                    edgeCount++;
+                }
+            });
+            document.getElementById("insp-id").innerText = hoveredNode.id;
+            document.getElementById("insp-group").innerText = hoveredNode.group;
+            document.getElementById("insp-links").innerText = edgeCount;
+            document.getElementById("inspector-card").classList.remove("hidden");
+            nodeGroup.select("circle").style("opacity", d => adjacentNodes.has(d.id) ? 1.0 : 0.25);
+            nodeGroup.select("text").style("opacity", d => adjacentNodes.has(d.id) ? 1.0 : 0.25);
+            link
+                .style("stroke-opacity", d => {
+                    const isActive = (d.source.id === hoveredNode.id || d.target.id === hoveredNode.id);
+                    return isActive ? 1.0 : 0.05;
+                })
+                .style("stroke-width", d => {
+                    const isActive = (d.source.id === hoveredNode.id || d.target.id === hoveredNode.id);
+                    return isActive ? getLinkStrokeWidth(d) * 1.5 : getLinkStrokeWidth(d) * 0.7;
+                });
+        }
+        function handleMouseOut() {
+            document.getElementById("inspector-card").classList.add("hidden");
+            nodeGroup.select("circle").style("opacity", 1.0);
+            nodeGroup.select("text").style("opacity", 1.0);
+            link
+                .style("stroke-opacity", d => getLinkOpacity(d))
+                .style("stroke-width", d => getLinkStrokeWidth(d));
+        }
+        function clickToToggleFix(event, d) {
+            if (event.defaultPrevented) return;
+            const circle = d3.select(this).select("circle");
+            if (d.fx !== null) {
+                d.fx = null;
+                d.fy = null;
+                circle.classed("fixed", false);
+                simulation.alphaTarget(0.1).restart();
+                setTimeout(() => simulation.alphaTarget(0), 500);
+            }
+        }
+        function drag(simulation) {
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.2).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d3.select(this).select("circle").classed("fixed", true);
+            }
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+        }
+        function resetLayout() {
+            graphData.nodes.forEach(d => {
+                d.fx = null;
+                d.fy = null;
+            });
+            nodeGroup.selectAll("circle").classed("fixed", false);
+            svg.transition().duration(750).call(
+                zoomBehavior.transform,
+                d3.zoomIdentity
+            );
+            document.getElementById("dist-slider").value = 70;
+            document.getElementById("dist-val").innerText = "70px";
+            document.getElementById("rep-slider").value = 200;
+            document.getElementById("rep-val").innerText = "-200";
+            currentDistance = 70;
+            currentRepulsion = -200;
+            simulation.force("link").distance(70);
+            simulation.force("charge").strength(-200);
+            simulation.alpha(0.5).restart();
+        }
+        document.getElementById("reset-btn").addEventListener("click", resetLayout);
+        document.getElementById("dist-slider").addEventListener("input", (e) => {
+            const val = +e.target.value;
+            document.getElementById("dist-val").innerText = `${val}px`;
+            currentDistance = val;
+            simulation.force("link").distance(currentDistance);
+            simulation.alphaTarget(0.1).restart();
+            setTimeout(() => simulation.alphaTarget(0), 400);
+        });
+        document.getElementById("rep-slider").addEventListener("input", (e) => {
+            const val = +e.target.value;
+            document.getElementById("rep-val").innerText = `-${val}`;
+            currentRepulsion = -val;
+            simulation.force("charge").strength(currentRepulsion);
+            simulation.alphaTarget(0.1).restart();
+            setTimeout(() => simulation.alphaTarget(0), 400);
+        });
+        document.getElementById("palette-select").addEventListener("change", (e) => {
+            currentPalette = e.target.value;
+            node.transition().duration(400).attr("fill", d => getColor(d.group));
+        });
+        function exportState() {
+            const cleanNodes = graphData.nodes.map(n => ({ 
+                id: n.id,
+                group: n.group,
+                x: n.x,
+                y: n.y,
+                fx: n.fx,
+                fy: n.fy
+            }));
+            const cleanLinks = graphData.links.map(l => ({
+                source: l.source.id || l.source,
+                target: l.target.id || l.target,
+                weight: l.weight || 1
+            }));
+            const exportObj = { nodes: cleanNodes, links: cleanLinks };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "network_state.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+        document.getElementById("export-btn").addEventListener("click", exportState);
+        const fileInput = document.getElementById("import-file-input");
+        document.getElementById("import-trigger-btn").addEventListener("click", () => {
+            fileInput.click();
+        });
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.nodes && parsed.links) {
+                        graphData = parsed;
+                        updateNetwork();
+                    } else {
+                        alert("Invalid JSON layout format.");
+                    }
+                } catch (err) {
+                    alert("Error parsing JSON: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+        document.getElementById("search-input").addEventListener("input", (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            if (query === "") {
+                nodeGroup.select("circle").style("stroke", "#0f172a").style("stroke-width", "2px");
+                return;
+            }
+            nodeGroup.each(function(d) {
+                const isMatch = d.id.toLowerCase().includes(query);
+                const circle = d3.select(this).select("circle");
+                if (isMatch) {
+                    circle.style("stroke", "#a855f7").style("stroke-width", "5px");
+                } else {
+                    circle.style("stroke", d.fx !== null ? "#f43f5e" : "#0f172a").style("stroke-width", d.fx !== null ? "4px" : "2px");
+                }
+            });
+        });
+        window.addEventListener("keydown", (event) => {
+            if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+                return;
+            }
+            const key = event.key.toUpperCase();
+            if (key === "R") {
+                resetLayout();
+            } else if (key === "E") {
+                exportState();
+            }
+        });
+        window.addEventListener('resize', () => {
+            width = container.clientWidth || window.innerWidth;
+            height = container.clientHeight || window.innerHeight;
+            svg.attr("viewBox", [0, 0, width, height]);
+            simulation.force("center", d3.forceCenter(width / 2, height / 2));
+            simulation.alpha(0.1).restart();
+        });
+        updateNetwork();
+    </script>
+</body>
+</html>
