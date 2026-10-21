@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Commit Garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f6f8f6; --surface:#ffffff; --fg:#17201a; --muted:#5d6b62; --line:#d8e0da;
+  --l0:#ebeef0; --l1:#9be9a8; --l2:#40c463; --l3:#30a14e; --l4:#216e39;
+  --accent:#1f7a3d; --danger:#b4232c; --tip-bg:#17201a; --tip-fg:#f2f6f3;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --cell:12px; --gap:3px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c110e; --surface:#141b17; --fg:#e4ece6; --muted:#8fa096; --line:#26322b;
+    --l0:#1e2621; --l1:#0e4429; --l2:#006d32; --l3:#26a641; --l4:#39d353;
+    --accent:#4cc46e; --danger:#ff6b6b; --tip-bg:#e4ece6; --tip-fg:#0c110e; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c110e; --surface:#141b17; --fg:#e4ece6; --muted:#8fa096; --line:#26322b;
+  --l0:#1e2621; --l1:#0e4429; --l2:#006d32; --l3:#26a641; --l4:#39d353;
+  --accent:#4cc46e; --danger:#ff6b6b; --tip-bg:#e4ece6; --tip-fg:#0c110e; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]:not([hidden=until-found i]){display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:32px 48px;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,5vw,40px);line-height:1.05;margin:0;letter-spacing:-.02em;text-wrap:balance}
+.sub{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.prompt{font-family:var(--f-mono);font-size:13px;color:var(--accent)}
+.stats{display:flex;gap:24px;font-variant-numeric:tabular-nums}
+.stat b{display:block;font-family:var(--f-display);font-weight:600;font-size:26px;line-height:1}
+.stat span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px;display:grid;gap:14px;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.headline{font-weight:500;font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--muted);font:500 13px var(--f-body);padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.seg button+button{border-left:1px solid var(--line)}
+
+.well{overflow-x:auto;padding-bottom:4px}
+.cal{display:grid;grid-template-columns:auto 1fr;column-gap:6px;width:max-content}
+.months{grid-column:2;position:relative;height:16px;font-size:11px;color:var(--muted)}
+.months span{position:absolute;top:0}
+.days{display:grid;grid-template-rows:repeat(7,var(--cell));row-gap:var(--gap);font-size:10px;color:var(--muted);font-family:var(--f-mono)}
+.days span{line-height:var(--cell)}
+.grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,var(--cell));grid-auto-columns:var(--cell);gap:var(--gap)}
+.cell{width:var(--cell);height:var(--cell);border-radius:2px;border:0;padding:0;background:var(--l0);cursor:pointer;outline-offset:1px;transition:transform .08s}
+.cell[data-l="1"]{background:var(--l1)} .cell[data-l="2"]{background:var(--l2)}
+.cell[data-l="3"]{background:var(--l3)} .cell[data-l="4"]{background:var(--l4)}
+.cell.future{visibility:hidden;pointer-events:none}
+.cell.today{box-shadow:0 0 0 1.5px var(--fg)}
+.cell:hover{transform:scale(1.25)}
+.cell:focus-visible{outline:2px solid var(--accent)}
+.resetting .cell{cursor:crosshair}
+@media (prefers-reduced-motion:reduce){.cell{transition:none}.cell:hover{transform:none}}
+
+.foot{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+.legend{display:flex;align-items:center;gap:4px}
+.legend i{width:var(--cell);height:var(--cell);border-radius:2px;display:inline-block}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:500 14px var(--f-body);padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn.danger{color:var(--danger)}
+.btn:focus-visible,.seg button:focus-visible,.keys summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.status{font-size:13px;color:var(--muted);min-height:1.5em}
+.confirm{display:inline-flex;gap:8px;align-items:center;font-size:13px}
+
+kbd{font-family:var(--f-mono);font-size:11px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;color:var(--fg);background:var(--surface);white-space:nowrap}
+.keys{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+.keys summary{cursor:pointer;color:var(--fg);font-weight:500;width:max-content}
+.keys-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-top:14px}
+.keys h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px;font-weight:600}
+.keys dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:0}
+.keys dt{white-space:nowrap}
+.keys dd{margin:0;color:var(--fg)}
+
+#tip{position:fixed;pointer-events:none;background:var(--tip-bg);color:var(--tip-fg);font-size:12px;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,calc(-100% - 10px));z-index:10;font-variant-numeric:tabular-nums}
+#tip b{font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="prompt">$ git commit --by-hand</div>
+      <h1>Commit Garden</h1>
+      <p class="sub">Click a day to add a commit. Each click deepens the green, just like the contribution graph on a profile page.</p>
+    </div>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="sTotal">0</b><span>Commits</span></div>
+      <div class="stat"><b id="sDays">0</b><span>Active days</span></div>
+      <div class="stat"><b id="sStreak">0</b><span>Best streak</span></div>
+    </div>
+  </header>
+
+  <section class="panel" id="panel">
+    <div class="toolbar">
+      <div class="headline" id="headline">0 contributions in the last year</div>
+      <div class="seg" role="group" aria-label="Click mode">
+        <button type="button" id="modeAdd" aria-pressed="true" title="Shortcut: A">＋ Add commit</button>
+        <button type="button" id="modeReset" aria-pressed="false" title="Shortcut: R">↺ Reset cell</button>
+      </div>
+    </div>
+    <div class="well">
+      <div class="cal">
+        <div></div>
+        <div class="months" id="months"></div>
+        <div class="days" aria-hidden="true"><span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span></div>
+        <div class="grid" id="grid" role="group" aria-label="Contribution calendar"></div>
+      </div>
+    </div>
+    <div class="foot">
+      <span>Right-click any cell to reset it. Outlined cell is today. Press <kbd>?</kbd> for shortcuts.</span>
+      <span class="legend">Less <i style="background:var(--l0)"></i><i style="background:var(--l1)"></i><i style="background:var(--l2)"></i><i style="background:var(--l3)"></i><i style="background:var(--l4)"></i> More</span>
+    </div>
+  </section>
+
+  <section class="actions">
+    <button class="btn primary" id="exJson" type="button" title="Shortcut: J">Export .json</button>
+    <button class="btn primary" id="exPng" type="button" title="Shortcut: P">Export .png</button>
+    <label class="btn" for="importFile" title="Shortcut: I">Import .json</label>
+    <input type="file" id="importFile" accept=".json,application/json" hidden>
+    <button class="btn" id="sample" type="button">Plant sample year</button>
+    <button class="btn danger" id="clearAll" type="button">Clear all</button>
+    <span class="confirm" id="confirmBox" hidden>Remove every commit?
+      <button class="btn danger" id="cYes" type="button">Clear</button>
+      <button class="btn" id="cNo" type="button">Keep</button>
+    </span>
+  </section>
+  <div class="status" id="status" role="status"></div>
+
+  <details class="keys" id="keys">
+    <summary>Keyboard shortcuts <kbd>?</kbd></summary>
+    <div class="keys-groups">
+      <section>
+        <h3>Move</h3>
+        <dl>
+          <dt><kbd>←</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>→</kbd></dt><dd>One day or one week</dd>
+          <dt><kbd>Shift</kbd>+<kbd>←</kbd> / <kbd>→</kbd></dt><dd>Four weeks</dd>
+          <dt><kbd>Home</kbd> / <kbd>End</kbd></dt><dd>First or last day of the week</dd>
+          <dt><kbd>T</kbd></dt><dd>Jump to today</dd>
+        </dl>
+      </section>
+      <section>
+        <h3>Edit</h3>
+        <dl>
+          <dt><kbd>Enter</kbd> / <kbd>Space</kbd></dt><dd>Apply the current mode</dd>
+          <dt><kbd>+</kbd></dt><dd>Add a commit</dd>
+          <dt><kbd>-</kbd></dt><dd>Remove one commit</dd>
+          <dt><kbd>0</kbd> / <kbd>Backspace</kbd></dt><dd>Reset the day</dd>
+          <dt><kbd>A</kbd> / <kbd>R</kbd></dt><dd>Add or Reset mode</dd>
+          <dt><kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Z</kbd></dt><dd>Undo</dd>
+        </dl>
+      </section>
+      <section>
+        <h3>Files and help</h3>
+        <dl>
+          <dt><kbd>J</kbd></dt><dd>Export .json</dd>
+          <dt><kbd>P</kbd></dt><dd>Export .png</dd>
+          <dt><kbd>I</kbd></dt><dd>Import .json</dd>
+          <dt><kbd>Esc</kbd></dt><dd>Cancel a pending clear</dd>
+          <dt><kbd>?</kbd></dt><dd>Show or hide this list</dd>
+        </dl>
+      </section>
+    </div>
+  </details>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const STORE = "commit-garden-v1";
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const pad = n => String(n).padStart(2,"0");
+  const key = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  const level = c => c<=0 ? 0 : Math.min(c,4);
+  let stT = null;
+
+  // Range: 53 week columns ending with the week containing today (Sunday-first, like GitHub).
+  const today = new Date(); today.setHours(0,0,0,0);
+  const start = new Date(today); start.setDate(today.getDate() - today.getDay() - 52*7);
+  const dates = [];
+  for(let d=new Date(start); dates.length<53*7; d.setDate(d.getDate()+1)) dates.push(new Date(d));
+  const todayI = 52*7 + today.getDay(); // index of today inside `dates`
+
+  // State + persistence
+  let counts = {};
+  try{ counts = JSON.parse(localStorage.getItem(STORE)||"{}") || {}; }catch(e){ counts = {}; }
+  const save = () => { try{ localStorage.setItem(STORE, JSON.stringify(counts)); }catch(e){} };
+
+  // Undo: keep a snapshot of the whole grid before each change (small data, so this is cheap and simple).
+  const history = [];
+  function snapshot(){ history.push(JSON.stringify(counts)); if(history.length>100) history.shift(); }
+  function undo(){
+    if(!history.length){ status("Nothing to undo."); return; }
+    counts = JSON.parse(history.pop()); save(); renderAll(); status("Undid the last change.");
+  }
+
+  let mode = "add";
+  let focusI = todayI;
+  const grid = $("grid"), cells = [];
+  const fmtLong = new Intl.DateTimeFormat(undefined,{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+
+  // Roving tabindex: only one cell sits in the Tab order; arrow keys move between cells.
+  dates.forEach((d,i)=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "cell"; b.dataset.i = i;
+    b.tabIndex = i===focusI ? 0 : -1;
+    if(d>today) b.classList.add("future");
+    if(i===todayI) b.classList.add("today");
+    grid.appendChild(b); cells.push(b);
+  });
+
+  // Month labels at the first column whose week starts in a new month.
+  const months = $("months"); let lastM = -1; const colW = 12+3;
+  for(let c=0;c<53;c++){
+    const m = dates[c*7].getMonth();
+    if(m!==lastM){
+      if(c<52){ const s=document.createElement("span"); s.textContent=MONTHS[m]; s.style.left=(c*colW)+"px"; months.appendChild(s); }
+      lastM = m;
+    }
+  }
+  months.style.width = (53*colW)+"px";
+
+  function status(msg){ $("status").textContent=msg; clearTimeout(stT); stT=setTimeout(()=>$("status").textContent="",5000); }
+
+  function paint(i){
+    const c = counts[key(dates[i])]||0, b = cells[i];
+    b.dataset.l = level(c);
+    b.setAttribute("aria-label", (c===1?"1 commit":c+" commits")+" on "+fmtLong.format(dates[i]));
+  }
+  function stats(){
+    let total=0, active=0, best=0, run=0;
+    dates.forEach(d=>{
+      if(d>today) return;
+      const c = counts[key(d)]||0;
+      total += c;
+      if(c>0){ active++; run++; best=Math.max(best,run); } else run=0;
+    });
+    $("sTotal").textContent=total; $("sDays").textContent=active; $("sStreak").textContent=best;
+    $("headline").textContent = total.toLocaleString()+" contribution"+(total===1?"":"s")+" in the last year";
+    return total;
+  }
+  function renderAll(){ cells.forEach((_,i)=>paint(i)); stats(); }
+
+  // Changes go through one function so undo, saving and rendering always stay in step.
+  // delta: +1 add, -1 remove one, null reset to zero.
+  function bump(i, delta){
+    if(i<0 || i>=cells.length || dates[i]>today) return;
+    const k = key(dates[i]), before = counts[k]||0;
+    const next = delta===null ? 0 : Math.max(0, before+delta);
+    if(next===before){ showTip(cells[i]); return; }
+    snapshot();
+    if(next===0) delete counts[k]; else counts[k]=next;
+    paint(i); stats(); save(); showTip(cells[i]);
+  }
+
+  // Tooltip
+  const tip = $("tip");
+  let tipCell = null;
+  function showTip(b){
+    if(!b || b.classList.contains("future")) return;
+    tipCell = b;
+    const i = +b.dataset.i, c = counts[key(dates[i])]||0;
+    tip.innerHTML = "<b>"+(c===0?"No commits":c===1?"1 commit":c+" commits")+"</b> on "+fmtLong.format(dates[i]);
+    const r = b.getBoundingClientRect();
+    tip.hidden = false;
+    const half = tip.offsetWidth/2;
+    const x = Math.min(Math.max(r.left+r.width/2, half+8), window.innerWidth-half-8);
+    tip.style.left = x+"px"; tip.style.top = r.top+"px";
+  }
+  function hideTip(){ tipCell = null; tip.hidden = true; }
+  const repositionTip = () => { if(tipCell) showTip(tipCell); };
+  window.addEventListener("scroll", repositionTip, {passive:true});
+  document.querySelector(".well").addEventListener("scroll", repositionTip, {passive:true});
+
+  // Focus helpers
+  function focusCell(i){ cells[focusI].tabIndex=-1; focusI=i; cells[i].tabIndex=0; }
+  function moveTo(i){
+    if(i<0 || i>=cells.length || dates[i]>today) return false;
+    focusCell(i); cells[i].focus(); return true;
+  }
+
+  // Mouse
+  grid.addEventListener("mouseover", e=>{ const b=e.target.closest(".cell"); if(b) showTip(b); });
+  grid.addEventListener("mouseleave", hideTip);
+  grid.addEventListener("focusin", e=>{ const b=e.target.closest(".cell"); if(b) showTip(b); });
+  grid.addEventListener("focusout", hideTip);
+  grid.addEventListener("click", e=>{
+    const b = e.target.closest(".cell"); if(!b) return;
+    const i = +b.dataset.i;
+    focusCell(i);
+    bump(i, mode==="add" ? 1 : null);
+  });
+  grid.addEventListener("contextmenu", e=>{
+    const b = e.target.closest(".cell"); if(!b) return;
+    e.preventDefault(); bump(+b.dataset.i, null);
+  });
+
+  // Modes
+  function setMode(m){
+    mode = m;
+    $("modeAdd").setAttribute("aria-pressed", String(m==="add"));
+    $("modeReset").setAttribute("aria-pressed", String(m==="reset"));
+    $("panel").classList.toggle("resetting", m==="reset");
+  }
+  function switchMode(m){
+    setMode(m);
+    status(m==="add" ? "Add mode: clicks and Enter add a commit." : "Reset mode: clicks and Enter clear a day.");
+  }
+  $("modeAdd").onclick = () => switchMode("add");
+  $("modeReset").onclick = () => switchMode("reset");
+
+  // Exports: plain browser downloads (Blob + temporary link). No host or bridge required.
+  function download(name, blob){
+    const url = URL.createObjectURL(blob);
+    const a = Object.assign(document.createElement("a"), {href:url, download:name});
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    status("Saved "+name+".");
+  }
+
+  function buildJson(){
+    const total = stats();
+    const days = dates.filter(d=>d<=today).map(d=>{
+      const c = counts[key(d)]||0;
+      return {date:key(d), weekday:d.getDay(), count:c, level:level(c)};
+    });
+    return JSON.stringify({
+      schema: "commit-garden/1",
+      exportedAt: new Date().toISOString(),
+      range: {start:key(dates[0]), end:key(today)},
+      totalContributions: total,
+      weeks: 53,
+      days
+    }, null, 2);
+  }
+  function exportJson(){
+    download("contributions-"+key(today)+".json", new Blob([buildJson()], {type:"application/json"}));
+  }
+
+  function buildPng(){
+    const cs = getComputedStyle(document.documentElement);
+    const v = n => cs.getPropertyValue(n).trim();
+    const scale=2, cell=12, gap=3, left=34, top=58, cw=cell+gap;
+    const W = left+53*cw+20, H = top+7*cw+44;
+    const cv = document.createElement("canvas"); cv.width=W*scale; cv.height=H*scale;
+    const x = cv.getContext("2d"); x.scale(scale,scale);
+    x.fillStyle = v("--surface"); x.fillRect(0,0,W,H);
+    x.fillStyle = v("--fg"); x.font = "600 14px "+v("--f-body");
+    x.fillText($("headline").textContent, left, 24);
+    x.fillStyle = v("--muted"); x.font = "11px "+v("--f-body");
+    let lm=-1;
+    for(let c=0;c<53;c++){
+      const m = dates[c*7].getMonth();
+      if(m!==lm){ if(c<52) x.fillText(MONTHS[m], left+c*cw, top-8); lm=m; }
+    }
+    x.font = "10px "+v("--f-mono");
+    [["Mon",1],["Wed",3],["Fri",5]].forEach(([t,r]) => x.fillText(t, 4, top+r*cw+10));
+    const lv = [v("--l0"),v("--l1"),v("--l2"),v("--l3"),v("--l4")];
+    const rr = (px,py) => { x.beginPath(); if(x.roundRect) x.roundRect(px,py,cell,cell,2); else x.rect(px,py,cell,cell); x.fill(); };
+    dates.forEach((d,i)=>{
+      if(d>today) return;
+      x.fillStyle = lv[level(counts[key(d)]||0)];
+      rr(left+Math.floor(i/7)*cw, top+(i%7)*cw);
+    });
+    const ly = top+7*cw+16;
+    x.fillStyle = v("--muted"); x.font = "11px "+v("--f-body");
+    let lx = W-20-5*cw-60; x.fillText("Less", lx, ly+10); lx+=30;
+    lv.forEach(c => { x.fillStyle=c; rr(lx,ly); lx+=cw; });
+    x.fillStyle = v("--muted"); x.fillText("More", lx+4, ly+10);
+    x.fillText(key(dates[0])+" → "+key(today), left, ly+10);
+    return new Promise(res => cv.toBlob(res, "image/png"));
+  }
+  async function exportPng(){
+    if(document.fonts && document.fonts.ready) await document.fonts.ready;
+    const blob = await buildPng();
+    if(blob) download("contributions-"+key(today)+".png", blob);
+    else status("Couldn't build the PNG. Try again.");
+  }
+  $("exJson").onclick = exportJson;
+  $("exPng").onclick = exportPng;
+
+  // Import
+  $("importFile").addEventListener("change", async e=>{
+    const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+    try{
+      const data = JSON.parse(await f.text());
+      if(!data || !Array.isArray(data.days)) throw new Error("not a commit garden export");
+      const next = {}; let n = 0;
+      data.days.forEach(d=>{
+        if(d && /^\d{4}-\d\d-\d\d$/.test(d.date) && Number.isFinite(d.count) && d.count>0){
+          next[d.date] = Math.floor(d.count); n++;
+        }
+      });
+      snapshot(); counts = next; save(); renderAll();
+      status("Imported "+n+" active day"+(n===1?"":"s")+" from "+f.name+". Ctrl/⌘+Z to undo.");
+    }catch(err){
+      status("That file isn't a Commit Garden export. Choose a .json file exported from this page.");
+    }
+  });
+
+  // Sample year
+  $("sample").onclick = () => {
+    snapshot(); counts = {};
+    dates.forEach((d,i)=>{
+      if(d>today) return;
+      const wk = d.getDay()%6!==0, r = Math.random();
+      const c = wk ? (r<.35?0:r<.6?1:r<.8?2:r<.93?4:8) : (r<.75?0:r<.9?1:3);
+      if(c) counts[key(d)] = c;
+    });
+    save(); renderAll(); status("Planted a random sample year. Ctrl/⌘+Z to undo.");
+  };
+
+  // Clear all, with an inline confirm that starts on the safe option
+  const clearBtn = $("clearAll"), confirmBox = $("confirmBox");
+  function askClear(){ confirmBox.hidden=false; clearBtn.hidden=true; $("cNo").focus(); }
+  function hideConfirm(){ confirmBox.hidden=true; clearBtn.hidden=false; clearBtn.focus(); }
+  clearBtn.onclick = askClear;
+  $("cNo").onclick = hideConfirm;
+  $("cYes").onclick = () => {
+    snapshot(); counts = {}; save(); renderAll(); hideConfirm();
+    status("Grid cleared. Ctrl/⌘+Z to undo.");
+  };
+
+  // Keyboard shortcuts: one listener on the document.
+  // Ignored while typing in a form field, and Ctrl/⌘ combos are left alone (except undo) so browser shortcuts like Ctrl+P still work.
+  const isTyping = t => !!t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+  const arrowSteps = {ArrowUp:-1, ArrowDown:1, ArrowLeft:-7, ArrowRight:7};
+
+  document.addEventListener("keydown", e=>{
+    if(isTyping(e.target) || e.altKey) return;
+    const k = e.key;
+    const lk = k.length===1 ? k.toLowerCase() : k;
+
+    if(e.metaKey || e.ctrlKey){
+      if(lk==="z" && !e.shiftKey){ e.preventDefault(); undo(); }
+      return;
+    }
+
+    // Move
+    if(arrowSteps[k]!==undefined){
+      e.preventDefault();
+      if(e.shiftKey && (k==="ArrowLeft" || k==="ArrowRight")){
+        const jump = Math.sign(arrowSteps[k]) * 28;
+        moveTo(Math.max(0, Math.min(todayI, focusI + jump)));
+      } else {
+        moveTo(focusI + arrowSteps[k]);
+      }
+      return;
+    }
+    if(k==="Home"){ e.preventDefault(); moveTo(focusI - (focusI%7)); return; }
+    if(k==="End"){ e.preventDefault(); moveTo(Math.min(focusI - (focusI%7) + 6, todayI)); return; }
+    if(lk==="t"){ e.preventDefault(); moveTo(todayI); return; }
+
+    // Edit
+    if(k==="+" || k==="="){ e.preventDefault(); bump(focusI, 1); return; }
+    if(k==="-" || k==="_"){ e.preventDefault(); bump(focusI, -1); return; }
+    if(k==="0" || k==="Backspace" || k==="Delete"){ e.preventDefault(); bump(focusI, null); return; }
+    if(lk==="a"){ e.preventDefault(); switchMode("add"); return; }
+    if(lk==="r"){ e.preventDefault(); switchMode("reset"); return; }
+    // Enter and Space on a focused cell use the browser's native click, so they follow the current mode.
+
+    // Files and help
+    if(lk==="j"){ e.preventDefault(); exportJson(); return; }
+    if(lk==="p"){ e.preventDefault(); exportPng(); return; }
+    if(lk==="i"){ e.preventDefault(); $("importFile").click(); return; }
+    if(k==="Escape"){
+      if(!confirmBox.hidden){ e.preventDefault(); hideConfirm(); }
+      else hideTip();
+      return;
+    }
+    if(k==="?"){ e.preventDefault(); const kp=$("keys"); kp.open = !kp.open; return; }
+  });
+
+  setMode("add");
+  renderAll();
+})();
+</script>
+</body>
+</html>
